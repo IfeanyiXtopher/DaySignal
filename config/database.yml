@@ -1,0 +1,28 @@
+# WeatherCheck — Postgres via Docker Compose locally (see docker-compose.yml).
+# Prefer ENV from root `.env` (loaded by dotenv-rails in development/test).
+#
+# Learning note: Rails reads DATABASE_URL if set and merges it over this file.
+# We also spell out host/port/user so `bin/rails db:create` can make
+# weather_check_development / weather_check_test without guessing.
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("POSTGRES_HOST", "localhost") %>
+  port: <%= ENV.fetch("POSTGRES_PORT", "5433") %>
+  username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
+  password: <%= ENV["POSTGRES_PASSWORD"] %>
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: weather_check_development
+
+test:
+  <<: *default
+  database: weather_check_test
+
+production:
+  <<: *default
+  # On the VPS, set DATABASE_URL (or discrete POSTGRES_* vars).
+  url: <%= ENV["DATABASE_URL"] %>

@@ -1,0 +1,8 @@
+# Sidekiq-Cron schedule. Must be a YAML mapping (even if empty).
+# Step 4 adds:
+#   dispatch_due_alerts:
+#     cron: "0 * * * *"
+#     class: "DispatchDueAlertsJob"
+#     queue: default
+---
+{}
