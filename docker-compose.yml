@@ -1,0 +1,32 @@
+# Local (and later VPS) data services for WeatherCheck.
+# Rails runs on the host in development; only Postgres is containerized here.
+# Redis is already installed on this Mac — we can add a redis service later for VPS parity.
+#
+# Usage:
+#   docker compose up -d
+#   docker compose ps
+#   docker compose down
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: weathercheck-db
+    restart: unless-stopped
+    ports:
+      # Host 5433 → container 5432. This Mac already has Postgres 18 on 5432
+      # (/Library/PostgreSQL/18). On the VPS (no host Postgres), use "5432:5432".
+      - "5433:5432"
+    # Pass DB vars straight into the container (names POSTGRES_* match the image).
+    # Avoid ${...} interpolation here so passwords with `$` stay intact.
+    env_file:
+      - .env
+    volumes:
+      - weathercheck_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  weathercheck_pgdata:

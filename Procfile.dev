@@ -1,0 +1,4 @@
+# bin/dev can be pointed at this later via foreman/overmind.
+# For Step 0 we document running these in separate terminals.
+web: bin/rails server -p 3000
+worker: bundle exec sidekiq -C config/sidekiq.yml

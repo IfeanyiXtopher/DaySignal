@@ -1,0 +1,6 @@
+# Sidekiq process settings. Start with: bundle exec sidekiq -C config/sidekiq.yml
+---
+:concurrency: 5
+:queues:
+  - default
+  - mailers
