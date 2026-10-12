@@ -1,0 +1,16 @@
+WeatherCheck alert for <%= @user.location_label %> (<%= @local_date %>).
+
+Forecast facts
+- Precipitation probability: <%= @forecast.precipitation_probability %>%
+- Summary: <%= @forecast.summary %>
+<% if @forecast.wind_speed %>- Wind speed: <%= @forecast.wind_speed %> m/s
+<% end %>
+
+Why this fired
+<%= @decision.reason %>
+
+Recommendation
+<%= @decision.recommendation %>
+
+Threshold: <%= @user.rain_threshold %>% · Timezone: <%= @user.timezone %>.
+Turn alerts off in your WeatherCheck preferences if you no longer want these emails.

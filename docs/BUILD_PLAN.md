@@ -33,7 +33,7 @@ and a **Verify** command or check that proves it is done. Nothing is marked
 
 ## Current position
 
-> **Step 2 — Weather client and rule engine: `[x]` done.** Next: Step 3 — Mailer and per-user alert job.
+> **Step 3 — Mailer and per-user alert job: `[x]` done.** Next: Step 4 — Hourly dispatch and timezone selection.
 
 ## Prerequisites on the developer machine
 
@@ -191,34 +191,29 @@ Live Lagos demo: POP 28% < threshold 50% → `trigger?=false`.
 
 ---
 
-## Step 3 — Mailer and per-user alert job `[ ]`
+## Step 3 — Mailer and per-user alert job `[x]`
 
 **Goal.** Background job fetches forecast, evaluates rules, and emails only
 when triggered. Web requests never call the weather API or SMTP.
 
-1. `[ ]` 3.1 `WeatherMailer`: HTML + text templates. Subject includes location
-   + local date. Body contract: location, forecast facts, why it fired, short
-   factual recommendation (no toy “umbrella” product framing).
-2. `[ ]` 3.2 `WeatherAlertJob#perform(user_id)`: load user; bail if alerts
-   disabled; fetch → evaluate → `deliver_now` inside job if triggered; set
-   `last_alerted_at`. Prefer `deliver_now` inside the job (avoid nested
-   deliver_later surprises).
-3. `[ ]` 3.3 Dev delivery: Letter Opener or log delivery. `MAILER_FROM` from
-   ENV.
-4. `[ ]` 3.4 Failure handling: missing user → drop; timeout → retry with
-   backoff (e.g. 3x); 401 → fail loudly, limited retries; SMTP → retry then
-   dead set.
-5. `[ ]` 3.5 Tests: trigger path invokes mailer; non-trigger does not; mailer
-   renders location + reason (assert body).
-6. `[ ]` 3.6 Manual console: `WeatherAlertJob.perform_later(user.id)` for
-   demo user; open Letter Opener.
+1. `[x]` 3.1 `WeatherMailer`: HTML + text; subject location + local date;
+   factual body (location, POP, reason, recommendation).
+2. `[x]` 3.2 `WeatherAlertJob`: fetch → evaluate → `deliver_now` if triggered;
+   sets `last_alerted_at`. Injectable `client:` for tests.
+3. `[x]` 3.3 Dev: Letter Opener by default; `MAILER_DELIVERY_METHOD=smtp`
+   uses Gmail SMTP from `.env` (`SMTP_*`, `MAILER_FROM`).
+4. `[x]` 3.4 Retries: timeout/429 ×3; 401 ×1; SMTP/timeouts ×3; missing user
+   no-op.
+5. `[x]` 3.5 Mailer + job tests (stubbed client; no network).
+6. `[x]` 3.6 `bin/rails alerts:deliver_one` manual path verified.
 
-**Artifact.** `WeatherMailer`, `WeatherAlertJob`, job/mailer tests, working
-dev email path.
+**Artifact.** `WeatherMailer`, `WeatherAlertJob`, tests, mail ENV wiring.
 
-**Verify.** Trigger path shows mail in Letter Opener; non-trigger sends
-nothing; Sidekiq retries documented failure without crashing the web process;
-tests green with stubbed client.
+**Verify.** Trigger path sets `last_alerted_at` (Letter Opener); non-trigger
+sends nothing; `bin/rails test` green with stubbed client.
+
+**Measured on 2026-10-12.** 37 tests green. Manual job with threshold 0 →
+`last_alerted_at` set under `letter_opener`.
 
 ---
 
@@ -336,6 +331,7 @@ path.
 | 2026-10-11 | 0 | Rails 8.1 app generated (`--skip-solid`); Sidekiq + Redis + Faraday + dotenv + letter_opener; ADRs 0001–0003; README; DB prepared; web + Sidekiq verified. |
 | 2026-10-12 | 1 | Rails 8 auth + registration; alert preference fields/UI; Lagos seed; 23 tests green. Active Job `:test` adapter in test env (Sidekiq stays for dev/prod). |
 | 2026-10-12 | 2 | OpenWeatherMap 2.5 client + AlertEvaluator (12h max POP, heavy rain rule); Faraday stubs; `weather:evaluate` live OK (Lagos POP 28%). 32 tests green. |
+| 2026-10-12 | 3 | WeatherMailer + WeatherAlertJob; Letter Opener default + optional Gmail SMTP from `.env`; 37 tests green; manual deliver_one verified. |
 
 ---
 
@@ -351,5 +347,5 @@ path.
 | 5 | Hardening, QA, optional deploy | Manual QA + README |
 | 6 | Pitch package + walkthrough | `docs/pitch.md` |
 
-**Next concrete action:** Step 3 — `WeatherMailer` + `WeatherAlertJob`
-(fetch → decide → email in Sidekiq).
+**Next concrete action:** Step 4 — `DispatchDueAlertsJob` + Sidekiq-Cron
+hourly timezone selection.

@@ -72,6 +72,19 @@ Uses `WEATHER_API_KEY` from `.env`. Automated tests stub Faraday and never
 call the network. Rules/docs: [`docs/definitions.md`](docs/definitions.md),
 [`docs/weather_provider.md`](docs/weather_provider.md).
 
+### Manual alert email (Step 3)
+
+```bash
+# Default: opens mail in the browser (Letter Opener)
+EMAIL=demo@weathercheck.local bin/rails alerts:deliver_one
+
+# Real Gmail SMTP (uses SMTP_* from `.env`):
+#   MAILER_DELIVERY_METHOD=smtp EMAIL=you@example.com bin/rails alerts:deliver_one
+```
+
+Sidekiq path (async): `WeatherAlertJob.perform_later(user.id)` with
+`bundle exec sidekiq -C config/sidekiq.yml` running.
+
 ## Layout (where logic will live)
 
 ```
