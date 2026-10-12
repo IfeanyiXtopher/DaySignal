@@ -33,7 +33,7 @@ and a **Verify** command or check that proves it is done. Nothing is marked
 
 ## Current position
 
-> **Step 3 — Mailer and per-user alert job: `[x]` done.** Next: Step 4 — Hourly dispatch and timezone selection.
+> **Step 4 — Hourly dispatch and timezone selection: `[x]` done.** Next: Step 5 — Hardening, demo polish, definition of done.
 
 ## Prerequisites on the developer machine
 
@@ -217,33 +217,29 @@ sends nothing; `bin/rails test` green with stubbed client.
 
 ---
 
-## Step 4 — Hourly dispatch and timezone selection `[ ]`
+## Step 4 — Hourly dispatch and timezone selection `[x]`
 
 **Goal.** Cron selects only users whose **local** alert hour matches the
 current hour in their timezone; at most one alert email per user per local
 day.
 
-1. `[ ]` 4.1 `DispatchDueAlertsJob`: for each `alerts_enabled` user, convert
-   `Time.current` with `ActiveSupport::TimeZone[user.timezone]`; enqueue
-   `WeatherAlertJob` only when `local.hour == user.alert_time.hour`.
-2. `[ ]` 4.2 Sidekiq-Cron schedule `config/schedule.yml` (or equivalent):
-   `0 * * * *` → `DispatchDueAlertsJob`.
-3. `[ ]` 4.3 Idempotency: skip if already alerted today in the user’s
-   timezone (`last_alerted_at`) **or** unique `alert_deliveries`
-   `(user_id, local_date)` — pick one and document.
-4. `[ ]` 4.4 Invalid timezone: skip user + error log; do not crash the batch.
-5. `[ ]` 4.5 Tests with frozen time: `Africa/Lagos` user due at 07:00 local
-   is selected at the matching UTC hour; wrong hour not selected; disabled
-   user not selected; same local day not double-enqueued after send.
-6. `[ ]` 4.6 Optional: SQL/Ruby batch notes in `docs/scheduling.md` (find_each,
-   concurrency limits).
+1. `[x]` 4.1 `DispatchDueAlertsJob` + `User#dispatch_status`: enqueue
+   `WeatherAlertJob` when local hour matches.
+2. `[x]` 4.2 Sidekiq-Cron `config/schedule.yml`: `0 * * * *` →
+   `DispatchDueAlertsJob`.
+3. `[x]` 4.3 Idempotency via `last_alerted_at` compared on the user’s **local
+   calendar date** (documented in `docs/scheduling.md`).
+4. `[x]` 4.4 Invalid timezone → log + skip; batch continues.
+5. `[x]` 4.5 Frozen-time tests: Lagos 07:00, wrong hour, disabled, same-day
+   idempotency, invalid TZ, Nairobi vs Lagos.
+6. `[x]` 4.6 `docs/scheduling.md` + `bin/rails alerts:dispatch`.
 
-**Artifact.** `DispatchDueAlertsJob`, cron schedule, idempotency, timezone
-tests.
+**Artifact.** `DispatchDueAlertsJob`, cron schedule, scheduling docs, tests.
 
-**Verify.** Timezone selection tests green; running dispatch with frozen time
-enqueues only due users; second run same local day does not spam; invalid
-timezone skipped safely.
+**Verify.** Dispatch/timezone tests green; same local day not double-enqueued;
+invalid timezone skipped safely.
+
+**Measured on 2026-10-12.** 46 tests green (9 new dispatch/timezone cases).
 
 ---
 
@@ -332,6 +328,7 @@ path.
 | 2026-10-12 | 1 | Rails 8 auth + registration; alert preference fields/UI; Lagos seed; 23 tests green. Active Job `:test` adapter in test env (Sidekiq stays for dev/prod). |
 | 2026-10-12 | 2 | OpenWeatherMap 2.5 client + AlertEvaluator (12h max POP, heavy rain rule); Faraday stubs; `weather:evaluate` live OK (Lagos POP 28%). 32 tests green. |
 | 2026-10-12 | 3 | WeatherMailer + WeatherAlertJob; Letter Opener default + optional Gmail SMTP from `.env`; 37 tests green; manual deliver_one verified. |
+| 2026-10-12 | 4 | DispatchDueAlertsJob + Sidekiq-Cron hourly; local-day idempotency via last_alerted_at; scheduling docs; 46 tests green. |
 
 ---
 
@@ -347,5 +344,5 @@ path.
 | 5 | Hardening, QA, optional deploy | Manual QA + README |
 | 6 | Pitch package + walkthrough | `docs/pitch.md` |
 
-**Next concrete action:** Step 4 — `DispatchDueAlertsJob` + Sidekiq-Cron
-hourly timezone selection.
+**Next concrete action:** Step 5 — hardening, README polish, Manual QA
+checklist, optional small VPS deploy.

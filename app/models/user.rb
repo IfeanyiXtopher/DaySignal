@@ -51,6 +51,29 @@ class User < ApplicationRecord
     end
   end
 
+  # Used by DispatchDueAlertsJob (Step 4).
+  # Returns :due, :not_due, :already_alerted, :incomplete, or :invalid_timezone.
+  def dispatch_status(now: Time.current)
+    return :incomplete unless preferences_complete?
+    return :incomplete unless alerts_enabled?
+
+    zone = ActiveSupport::TimeZone[timezone]
+    return :invalid_timezone unless zone
+
+    local = now.in_time_zone(zone)
+    return :not_due unless alert_time && local.hour == alert_time.hour
+    return :already_alerted if already_alerted_on_local_date?(local.to_date, zone: zone)
+
+    :due
+  end
+
+  # Idempotency: at most one alert evaluation email stamp per local calendar day.
+  def already_alerted_on_local_date?(local_date, zone: ActiveSupport::TimeZone[timezone])
+    return false if last_alerted_at.blank? || zone.nil?
+
+    last_alerted_at.in_time_zone(zone).to_date == local_date
+  end
+
   private
 
   def timezone_must_resolve
@@ -60,3 +83,4 @@ class User < ApplicationRecord
     errors.add(:timezone, "is not a known timezone")
   end
 end
+

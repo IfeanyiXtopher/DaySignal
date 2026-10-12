@@ -1,8 +1,10 @@
-# Sidekiq-Cron schedule. Must be a YAML mapping (even if empty).
-# Step 4 adds:
-#   dispatch_due_alerts:
-#     cron: "0 * * * *"
-#     class: "DispatchDueAlertsJob"
-#     queue: default
+# Sidekiq-Cron schedule (loaded when the Sidekiq process boots).
+# Must be a YAML mapping — comments-only / empty files crash Sidekiq.
+#
+# "0 * * * *" = at minute 0 of every hour (server cron timezone = Sidekiq process TZ,
+# usually UTC on a VPS). Selection still uses each user's local timezone in Ruby.
 ---
-{}
+dispatch_due_alerts:
+  cron: "0 * * * *"
+  class: "DispatchDueAlertsJob"
+  queue: default
