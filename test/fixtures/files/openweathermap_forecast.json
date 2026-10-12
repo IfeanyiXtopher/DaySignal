@@ -1,0 +1,27 @@
+{
+  "cod": "200",
+  "list": [
+    {
+      "dt": 1760000400,
+      "main": { "temp": 28.1 },
+      "weather": [ { "id": 500, "main": "Rain", "description": "light rain" } ],
+      "wind": { "speed": 3.2 },
+      "pop": 0.62,
+      "rain": { "3h": 1.2 }
+    },
+    {
+      "dt": 1760011200,
+      "main": { "temp": 27.0 },
+      "weather": [ { "id": 801, "main": "Clouds", "description": "few clouds" } ],
+      "wind": { "speed": 2.1 },
+      "pop": 0.20
+    },
+    {
+      "dt": 1760022000,
+      "main": { "temp": 26.4 },
+      "weather": [ { "id": 800, "main": "Clear", "description": "clear sky" } ],
+      "wind": { "speed": 1.8 },
+      "pop": 0.05
+    }
+  ]
+}
