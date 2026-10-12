@@ -16,7 +16,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Background jobs (Sidekiq + Redis) — Simple-style async work
 gem "redis", ">= 4.0.1"
-gem "sidekiq", "~> 7.3"
+gem "sidekiq", "~> 8.0"
 gem "sidekiq-cron", "~> 2.0"
 # Sidekiq 7 is not compatible with connection_pool 3.x yet
 gem "connection_pool", "~> 2.4"
