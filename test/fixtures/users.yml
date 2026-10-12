@@ -1,0 +1,23 @@
+<% password_digest = BCrypt::Password.create("password") %>
+
+one:
+  email_address: one@example.com
+  password_digest: <%= password_digest %>
+  location_label: Lagos, Nigeria
+  latitude: 6.5244
+  longitude: 3.3792
+  timezone: Africa/Lagos
+  alert_time: "2000-01-01 07:00:00"
+  rain_threshold: 50
+  alerts_enabled: true
+
+two:
+  email_address: two@example.com
+  password_digest: <%= password_digest %>
+  location_label: Nairobi, Kenya
+  latitude: -1.2921
+  longitude: 36.8219
+  timezone: Nairobi
+  alert_time: "2000-01-01 08:00:00"
+  rain_threshold: 40
+  alerts_enabled: true

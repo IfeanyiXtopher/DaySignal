@@ -27,8 +27,8 @@ gem "faraday", "~> 2.12"
 # Load root `.env` in development/test
 gem "dotenv-rails", groups: %i[development test]
 
-# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+# has_secure_password (Rails authentication generator)
+gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -68,3 +68,4 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+

@@ -33,7 +33,7 @@ and a **Verify** command or check that proves it is done. Nothing is marked
 
 ## Current position
 
-> **Step 0 — Scope and repository foundation: `[x]` done.** Next: Step 1 — Auth and alert preferences.
+> **Step 1 — Auth and alert preferences: `[x]` done.** Next: Step 2 — Weather client and rule engine.
 
 ## Prerequisites on the developer machine
 
@@ -132,34 +132,34 @@ Postgres 16 (Docker), Redis PONG.
 
 ---
 
-## Step 1 — Auth and alert preferences `[ ]`
+## Step 1 — Auth and alert preferences `[x]`
 
 **Goal.** A user can register, sign in, and persist a single location plus
 alert preferences. No weather API yet.
 
-1. `[ ]` 1.1 Auth: Rails 8 authentication generator **or** Devise — pick one
-   and stick. Sessions for sign-in / sign-out / sign-up.
-2. `[ ]` 1.2 Migration on `users` (or split only if needed later):
-   `location_label`, `latitude`, `longitude`, `timezone`, `alert_time`,
-   `rain_threshold` (integer, default 40–50), `alerts_enabled` (boolean,
-   default true), `last_alerted_at` (datetime, nullable).
-3. `[ ]` 1.3 Validations: email uniqueness; timezone in
-   `ActiveSupport::TimeZone`; `rain_threshold` 0–100; location label present;
-   lat/long present and in range (or city-only deferred — document choice).
-4. `[ ]` 1.4 `PreferencesController` + Hotwire/ERB form: location, timezone
-   select, alert time, threshold, enabled toggle. Strong params. Flash on save.
-5. `[ ]` 1.5 Root / dashboard shows simple status: “Alerts on · next window ~
-   {local time}” (optional but preferred).
-6. `[ ]` 1.6 Tests: invalid timezone rejected; invalid threshold rejected;
-   happy-path preferences persist.
-7. `[ ]` 1.7 Seed: one demo user with Lagos preferences (fake email only).
+1. `[x]` 1.1 Auth: Rails 8 authentication generator (sessions + password
+   reset) plus custom `RegistrationsController` for sign-up. No Devise.
+2. `[x]` 1.2 Migration `AddAlertPreferencesToUsers`: `location_label`,
+   `latitude`/`longitude` (decimal 10,6), `timezone`, `alert_time`,
+   `rain_threshold` (default 50), `alerts_enabled` (default true),
+   `last_alerted_at`.
+3. `[x]` 1.3 Validations on `:preferences_update` context: timezone must
+   resolve via `ActiveSupport::TimeZone[]` (includes `Africa/Lagos` extras);
+   threshold 0–100; lat/long ranges; location required. Lat/long entered
+   manually (no geocoding yet).
+4. `[x]` 1.4 `PreferencesController` + ERB form; strong params; flash on save.
+5. `[x]` 1.5 Root dashboard shows `alert_status_summary` when signed in.
+6. `[x]` 1.6 Tests: invalid timezone/threshold rejected; happy-path persist;
+   registration + preferences controller coverage.
+7. `[x]` 1.7 Seed: `demo@weathercheck.local` / `password123` (Lagos 07:00).
 
-**Artifact.** Auth + preferences UI; schema for alert fields; preference
-tests; `db/seeds.rb` demo user.
+**Artifact.** Auth + preferences UI; schema; preference tests; seed user.
 
-**Verify.** Sign up → save preferences → reload shows same values;
-`bin/rails test` (or `bundle exec rspec`) green for preference/auth cases;
-no weather network calls in this step.
+**Verify.** `bin/rails test` → 23 passed; seed demo status shows Lagos window;
+no weather network calls.
+
+**Measured on 2026-10-12.** 23 runs, 84 assertions, 0 failures. Demo:
+`Alerts on · next window ~ 07:00 (Africa/Lagos)`.
 
 ---
 
@@ -338,6 +338,7 @@ path.
 | 2026-10-11 | — | Tracker written from `APPROACH.md`. No Rails app generated yet. |
 | 2026-10-11 | prereq | rbenv + Ruby 3.3.12; Bundler; Docker Postgres 16 on host :5433 (`weathercheck-db`); root `.env` + `.gitignore`; Redis already local. Ready for Step 0. |
 | 2026-10-11 | 0 | Rails 8.1 app generated (`--skip-solid`); Sidekiq + Redis + Faraday + dotenv + letter_opener; ADRs 0001–0003; README; DB prepared; web + Sidekiq verified. |
+| 2026-10-12 | 1 | Rails 8 auth + registration; alert preference fields/UI; Lagos seed; 23 tests green. Active Job `:test` adapter in test env (Sidekiq stays for dev/prod). |
 
 ---
 
@@ -353,6 +354,5 @@ path.
 | 5 | Hardening, QA, optional deploy | Manual QA + README |
 | 6 | Pitch package + walkthrough | `docs/pitch.md` |
 
-**Next concrete action:** Step 0 only — generate the Rails app, wire Postgres
-+ Redis + Sidekiq, write `README.md` and ADRs, mark tasks `[x]` only when
-Verify passes.
+**Next concrete action:** Step 2 — `WeatherClient`, `Forecast`, `AlertEvaluator`
++ stubbed tests (no live weather in CI).
