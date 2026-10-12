@@ -33,7 +33,7 @@ and a **Verify** command or check that proves it is done. Nothing is marked
 
 ## Current position
 
-> **Step 1 — Auth and alert preferences: `[x]` done.** Next: Step 2 — Weather client and rule engine.
+> **Step 2 — Weather client and rule engine: `[x]` done.** Next: Step 3 — Mailer and per-user alert job.
 
 ## Prerequisites on the developer machine
 
@@ -163,35 +163,31 @@ no weather network calls.
 
 ---
 
-## Step 2 — Weather client and rule engine `[ ]`
+## Step 2 — Weather client and rule engine `[x]`
 
 **Goal.** Given lat/long + threshold, fetch (or stub) a forecast and decide
 trigger in pure Ruby — no mail yet.
 
-1. `[ ]` 2.1 Lock provider: OpenWeatherMap **or** WeatherAPI. Document in
-   ADR or `docs/weather_provider.md`. ENV: `WEATHER_API_KEY`,
-   `WEATHER_PROVIDER`.
-2. `[ ]` 2.2 `app/services/forecast.rb` value object:
-   `precipitation_probability`, `summary`, `wind_speed`, `raw`, `fetched_at`.
-3. `[ ]` 2.3 `app/services/weather_client.rb` (Faraday): GET forecast by
-   lat/long; normalize into `Forecast`; typed errors for timeout / 401 / 429.
-4. `[ ]` 2.4 `app/services/alert_evaluator.rb`: POP ≥ `rain_threshold` →
-   trigger; optional heavy-precip constant; otherwise no email. Return
-   structured decision with `trigger?` and `reason` string
-   (e.g. `precipitation_probability=62 >= threshold=50`).
-5. `[ ]` 2.5 Unit tests with Faraday stub / WebMock — **no network in CI**.
-   Below threshold → no trigger; at/above → trigger; client normalizes stub
-   JSON.
-6. `[ ]` 2.6 Optional: `bin/rails runner` or rake task to print decision for
-   one seeded user (manual live key once, not CI).
-7. `[ ]` 2.7 Document forecast window choice (next N hours vs daily) in
-   `docs/definitions.md`.
+1. `[x]` 2.1 Provider locked: OpenWeatherMap 2.5 forecast (free-key friendly).
+   Docs: `docs/weather_provider.md`. ENV: `WEATHER_API_KEY`,
+   `WEATHER_PROVIDER=openweathermap`.
+2. `[x]` 2.2 `app/services/forecast.rb` value object.
+3. `[x]` 2.3 `app/services/weather_client.rb` (Faraday): typed errors for
+   timeout / 401 / 429; injectable connection for tests.
+4. `[x]` 2.4 `app/services/alert_evaluator.rb`: POP ≥ threshold → trigger;
+   heavy precip ≥ 5 mm / 3h also triggers; structured `Decision`.
+5. `[x]` 2.5 Faraday test-adapter stubs — **no network in CI**.
+6. `[x]` 2.6 `bin/rails weather:evaluate EMAIL=...` for live manual check.
+7. `[x]` 2.7 `docs/definitions.md`: next **12 hours**, max POP among 3h slots.
 
-**Artifact.** `WeatherClient`, `Forecast`, `AlertEvaluator`, provider docs,
-evaluator + client tests.
+**Artifact.** `WeatherClient`, `Forecast`, `AlertEvaluator`, provider +
+definitions docs, service tests, rake task.
 
-**Verify.** `bin/rails test test/services/` (or equivalent) green; manual
-live fetch once with real key succeeds locally; CI never calls the provider.
+**Verify.** `bin/rails test test/services/` green; live `weather:evaluate`
+succeeds with real key; CI never calls the provider.
+
+**Measured on 2026-10-12.** Service tests 9/9; full suite 32/32.
+Live Lagos demo: POP 28% < threshold 50% → `trigger?=false`.
 
 ---
 
@@ -339,6 +335,7 @@ path.
 | 2026-10-11 | prereq | rbenv + Ruby 3.3.12; Bundler; Docker Postgres 16 on host :5433 (`weathercheck-db`); root `.env` + `.gitignore`; Redis already local. Ready for Step 0. |
 | 2026-10-11 | 0 | Rails 8.1 app generated (`--skip-solid`); Sidekiq + Redis + Faraday + dotenv + letter_opener; ADRs 0001–0003; README; DB prepared; web + Sidekiq verified. |
 | 2026-10-12 | 1 | Rails 8 auth + registration; alert preference fields/UI; Lagos seed; 23 tests green. Active Job `:test` adapter in test env (Sidekiq stays for dev/prod). |
+| 2026-10-12 | 2 | OpenWeatherMap 2.5 client + AlertEvaluator (12h max POP, heavy rain rule); Faraday stubs; `weather:evaluate` live OK (Lagos POP 28%). 32 tests green. |
 
 ---
 
@@ -354,5 +351,5 @@ path.
 | 5 | Hardening, QA, optional deploy | Manual QA + README |
 | 6 | Pitch package + walkthrough | `docs/pitch.md` |
 
-**Next concrete action:** Step 2 — `WeatherClient`, `Forecast`, `AlertEvaluator`
-+ stubbed tests (no live weather in CI).
+**Next concrete action:** Step 3 — `WeatherMailer` + `WeatherAlertJob`
+(fetch → decide → email in Sidekiq).

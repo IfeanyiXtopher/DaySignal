@@ -62,6 +62,16 @@ Health check: [http://localhost:3000/up](http://localhost:3000/up)
 
 Sign up at `/registration/new`, then save preferences at `/preferences/edit`.
 
+### Manual weather decision (Step 2, live API — not CI)
+
+```bash
+EMAIL=demo@weathercheck.local bin/rails weather:evaluate
+```
+
+Uses `WEATHER_API_KEY` from `.env`. Automated tests stub Faraday and never
+call the network. Rules/docs: [`docs/definitions.md`](docs/definitions.md),
+[`docs/weather_provider.md`](docs/weather_provider.md).
+
 ## Layout (where logic will live)
 
 ```
