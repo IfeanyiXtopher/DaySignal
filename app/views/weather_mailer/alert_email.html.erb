@@ -1,0 +1,21 @@
+<p>WeatherCheck alert for <strong><%= @user.location_label %></strong> (<%= @local_date %>).</p>
+
+<h2>Forecast facts</h2>
+<ul>
+  <li>Precipitation probability: <%= @forecast.precipitation_probability %>%</li>
+  <li>Summary: <%= @forecast.summary %></li>
+  <% if @forecast.wind_speed %>
+    <li>Wind speed: <%= @forecast.wind_speed %> m/s</li>
+  <% end %>
+</ul>
+
+<h2>Why this fired</h2>
+<p><code><%= @decision.reason %></code></p>
+
+<h2>Recommendation</h2>
+<p><%= @decision.recommendation %></p>
+
+<p style="color:#666;font-size:0.9em;">
+  Threshold: <%= @user.rain_threshold %>% · Timezone: <%= @user.timezone %>.
+  You can turn alerts off in your WeatherCheck preferences.
+</p>
