@@ -53,12 +53,20 @@ class WeatherClient
   def handle_status!(response)
     case response.status
     when 200 then nil
-    when 401, 403 then raise UnauthorizedError, "weather API unauthorized (#{response.status})"
-    when 429 then raise RateLimitError, "weather API rate limited"
+    when 401, 403
+      # Never log response bodies (may echo request/key material from some gateways).
+      Rails.logger.error("[WeatherClient] unauthorized status=#{response.status}")
+      raise UnauthorizedError, "weather API unauthorized (#{response.status})"
+    when 429
+      Rails.logger.warn("[WeatherClient] rate limited — job will back off and retry")
+      raise RateLimitError, "weather API rate limited"
     else
-      raise UnexpectedResponseError, "weather API HTTP #{response.status}: #{response.body.to_s.truncate(200)}"
+      # Truncate; do not dump full provider payloads at any level from here.
+      Rails.logger.error("[WeatherClient] unexpected status=#{response.status}")
+      raise UnexpectedResponseError, "weather API HTTP #{response.status}: #{response.body.to_s.truncate(120)}"
     end
   end
+
 
   def normalize(payload)
     list = Array(payload["list"])

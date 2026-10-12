@@ -1,6 +1,10 @@
 # Sidekiq process settings. Start with: bundle exec sidekiq -C config/sidekiq.yml
+#
+# Concurrency 5 keeps OpenWeatherMap / SMTP from stampeding on a small VPS
+# when DispatchDueAlertsJob enqueues many WeatherAlertJobs at once.
 ---
 :concurrency: 5
+:timeout: 25
 :queues:
   - default
   - mailers

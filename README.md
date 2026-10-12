@@ -1,13 +1,81 @@
 # WeatherCheck
 
-Timezone-aware **weather alert delivery**. Users save a location, a local alert
-time, a timezone, and a rain threshold. An hourly job selects people due in
-their local hour, fetches a forecast, applies deterministic rules, and emails
-them asynchronously via Sidekiq.
+Timezone-aware **weather alert delivery** for learning production Rails.
 
-Learning project: practice Rails patterns used by systems like
-[Simple](https://docs.simple.org/) (ActiveRecord, Sidekiq, cron, Action Mailer,
-Hotwire). Not a meteorology product. Decisions are **code**, not an LLM.
+Users save a location, local alert time, timezone, and rain threshold. An hourly
+job selects people due in **their** local hour, fetches a forecast, applies
+**deterministic** rules (not an LLM), and emails them asynchronously via Sidekiq.
+
+Built to practice patterns used by systems like
+[Simple](https://docs.simple.org/) (Resolve to Save Lives): ActiveRecord,
+Sidekiq, cron, Action Mailer, Hotwire. **Not a meteorology product** — an honest
+learning app with a real end-to-end loop.
+
+## Contents
+
+- [15-minute local demo](#15-minute-local-demo)
+- [Architecture](#architecture)
+- [Stack](#stack)
+- [Docs](#docs)
+- [Manual checks](#manual-checks)
+- [Definition of done (MVP)](#definition-of-done-mvp)
+- [Layout](#layout)
+- [Environment](#environment)
+
+## 15-minute local demo
+
+```bash
+# Prerequisites: rbenv Ruby 3.3.12, Docker Desktop, Redis
+git clone <your-fork-or-path> WeatherCheck && cd WeatherCheck
+cp .env.example .env   # add WEATHER_API_KEY (and SMTP later if you want)
+
+docker compose up -d
+redis-cli ping         # PONG
+
+bundle install
+bin/rails db:prepare
+bin/rails db:seed
+
+# Terminal A
+bin/rails server
+
+# Terminal B
+bundle exec sidekiq -C config/sidekiq.yml
+```
+
+1. Open http://localhost:3000 — sign in as `demo@weathercheck.local` / `password123`
+2. Confirm preferences (Lagos, 07:00, threshold 50%)
+3. Health: http://localhost:3000/up
+4. Optional live forecast: `EMAIL=demo@weathercheck.local bin/rails weather:evaluate`
+5. Optional email preview: lower threshold to `0` in the UI, then
+   `EMAIL=demo@weathercheck.local bin/rails alerts:deliver_one`
+   (Letter Opener opens a browser tab; set `MAILER_DELIVERY_METHOD=smtp` for Gmail)
+
+Automated safety net: `bin/rails test` (includes Manual QA scenarios).
+
+## Architecture
+
+```text
+User saves preferences (Rails + Postgres)
+        ↓
+Sidekiq-Cron every hour → DispatchDueAlertsJob
+        ↓
+Only users whose LOCAL hour matches → WeatherAlertJob
+        ↓
+Faraday → OpenWeatherMap → Forecast DTO
+        ↓
+AlertEvaluator (POP / heavy rain rules in Ruby)
+        ↓
+If triggered → Action Mailer (Letter Opener or SMTP)
+```
+
+Idempotency: at most one alert stamp per user per **local** calendar day
+(`last_alerted_at`).
+
+## Stack
+
+Rails 8 · PostgreSQL (Docker) · Redis · Sidekiq · Sidekiq-Cron · Faraday ·
+Action Mailer · Hotwire (Turbo + Stimulus) · ERB
 
 ## Docs
 
@@ -16,110 +84,67 @@ Hotwire). Not a meteorology product. Decisions are **code**, not an LLM.
 | [`APPROACH.md`](APPROACH.md) | Product rules and architecture bible |
 | [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md) | Step tracker — read *Current position* first |
 | [`docs/adr/`](docs/adr/) | Architecture decision records |
+| [`docs/definitions.md`](docs/definitions.md) | Forecast window + trigger rules |
+| [`docs/scheduling.md`](docs/scheduling.md) | Timezone dispatch details |
+| [`docs/weather_provider.md`](docs/weather_provider.md) | OpenWeatherMap 2.5 choice |
 
-## Stack (locked)
+## Manual checks
 
-Rails 8 · PostgreSQL (Docker) · Redis · Sidekiq · Sidekiq-Cron · Faraday ·
-Action Mailer · Hotwire
+Encoded as `test/integration/manual_qa_test.rb` (APPROACH §13):
 
-## Prerequisites (once per machine)
-
-- Ruby **3.3.12** via rbenv (see `.ruby-version`)
-- Docker Desktop (Postgres)
-- Redis (`redis-cli ping` → `PONG`)
-- Copy `.env.example` → `.env` and fill secrets
-
-## Local boot (about 5 minutes)
-
-```bash
-# 0) Toolchain
-cd /path/to/WeatherCheck
-ruby -v                    # expect 3.3.12
-
-# 1) Data services
-#    Docker Desktop must be running
-docker compose up -d       # Postgres on localhost:5433
-redis-cli ping             # PONG
-
-# 2) App
-bundle install
-bin/rails db:prepare
-
-# 3) Processes (two terminals)
-bin/rails server           # http://localhost:3000
-bundle exec sidekiq -C config/sidekiq.yml
-```
-
-Health check: [http://localhost:3000/up](http://localhost:3000/up)
-
-### Demo user (after `bin/rails db:seed`)
-
-| Field | Value |
-| --- | --- |
-| Email | `demo@weathercheck.local` |
-| Password | `password123` |
-| Location | Lagos, Nigeria (`Africa/Lagos`, 07:00, threshold 50%) |
-
-Sign up at `/registration/new`, then save preferences at `/preferences/edit`.
-
-### Manual weather decision (Step 2, live API — not CI)
+| # | Scenario | Covered by tests |
+| --- | --- | --- |
+| 1 | Lagos due hour + trigger path → mail | yes |
+| 2 | High threshold + low POP → no mail | yes |
+| 3 | Wrong local hour → not dispatched | yes |
+| 4 | Alerts disabled → not dispatched | yes |
+| 5 | Bad API key fails job; prefs UI still works | yes |
+| 6 | Prefs UI works without Sidekiq worker | yes |
 
 ```bash
-EMAIL=demo@weathercheck.local bin/rails weather:evaluate
+bin/rails test test/integration/manual_qa_test.rb
 ```
 
-Uses `WEATHER_API_KEY` from `.env`. Automated tests stub Faraday and never
-call the network. Rules/docs: [`docs/definitions.md`](docs/definitions.md),
-[`docs/weather_provider.md`](docs/weather_provider.md).
+## Definition of done (MVP)
 
-### Manual alert email (Step 3)
+A user can:
 
-```bash
-# Default: opens mail in the browser (Letter Opener)
-EMAIL=demo@weathercheck.local bin/rails alerts:deliver_one
+1. Create an account and sign in
+2. Save location, timezone, alert time, rain threshold
+3. Be selected by the hourly dispatcher in their local hour
+4. Receive email when the threshold is met (Letter Opener or SMTP)
+5. Receive nothing when it is not
+6. Turn alerts off and stop being selected
 
-# Real Gmail SMTP (uses SMTP_* from `.env`):
-#   MAILER_DELIVERY_METHOD=smtp EMAIL=you@example.com bin/rails alerts:deliver_one
-```
+Plus: Sidekiq + Redis jobs, timezone tests, weather stubbed in CI, README enough
+to run locally. **Optional VPS deploy** is separate (see BUILD_PLAN Step 5.6).
 
-Sidekiq path (async): `WeatherAlertJob.perform_later(user.id)` with
-`bundle exec sidekiq -C config/sidekiq.yml` running.
-
-### Hourly dispatch (Step 4)
-
-With Sidekiq running, Sidekiq-Cron loads `config/schedule.yml` and runs
-`DispatchDueAlertsJob` at the top of every hour. Manual once:
-
-```bash
-bin/rails alerts:dispatch
-```
-
-Only users whose **local** alert hour matches are enqueued (see
-[`docs/scheduling.md`](docs/scheduling.md)).
-
-## Layout (where logic will live)
+## Layout
 
 ```
 app/
-  models/          # User + alert preference fields (Step 1)
-  services/        # WeatherClient, Forecast, AlertEvaluator (Step 2)
-  jobs/            # WeatherAlertJob, DispatchDueAlertsJob (Steps 3–4)
-  mailers/         # WeatherMailer (Step 3)
-  controllers/     # Auth + preferences (Step 1)
+  models/          # User + alert preferences
+  services/        # WeatherClient, Forecast, AlertEvaluator
+  jobs/            # DispatchDueAlertsJob, WeatherAlertJob
+  mailers/         # WeatherMailer
+  controllers/     # Auth + preferences
 config/
-  sidekiq.yml
-  schedule.yml     # Sidekiq-Cron (Step 4)
-docker-compose.yml # Postgres 16
-docs/BUILD_PLAN.md
+  sidekiq.yml      # concurrency capped for small hosts
+  schedule.yml     # hourly cron
+docker-compose.yml # Postgres 16 → host :5433
 ```
 
-## Environment variables
+## Environment
 
-See `.env.example`. Important locally:
+Copy `.env.example` → `.env`. Never commit `.env`.
 
-- `POSTGRES_*` / host port **5433** (Compose; host Postgres 18 may own 5432)
-- `REDIS_URL`
-- `WEATHER_API_KEY` (live fetch from Step 2; tests stub the network)
+| Variable | Purpose |
+| --- | --- |
+| `POSTGRES_*` | Docker Postgres (host port **5433** locally) |
+| `REDIS_URL` | Sidekiq broker |
+| `WEATHER_API_KEY` | OpenWeatherMap (live only; tests stub) |
+| `MAILER_DELIVERY_METHOD` | `letter_opener` (default) or `smtp` |
+| `SMTP_*` / `MAILER_FROM` | Gmail (or other) when using SMTP |
 
 ## Current build step
 

@@ -5,8 +5,10 @@ require_relative "test_helpers/session_test_helper"
 
 module ActiveSupport
   class TestCase
-    # Run tests in parallel with specified workers
-    parallelize(workers: :number_of_processors)
+    # Single process: parallel workers + pg gem segfaulted on this machine.
+    # Re-enable with `parallelize(workers: :number_of_processors)` if CI is fine.
+    parallelize(workers: 1)
+
 
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all

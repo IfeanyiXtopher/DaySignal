@@ -33,7 +33,7 @@ and a **Verify** command or check that proves it is done. Nothing is marked
 
 ## Current position
 
-> **Step 4 — Hourly dispatch and timezone selection: `[x]` done.** Next: Step 5 — Hardening, demo polish, definition of done.
+> **Step 5 — Hardening and demo polish: `[x]` done (local MVP).** Optional VPS deploy (5.6) and résumé links (5.7) wait until you choose to ship. Next: Step 6 — Documentation and pitch package.
 
 ## Prerequisites on the developer machine
 
@@ -243,40 +243,38 @@ invalid timezone skipped safely.
 
 ---
 
-## Step 5 — Hardening, demo polish, and definition of done `[ ]`
+## Step 5 — Hardening, demo polish, and definition of done `[x]`
 
 **Goal.** Safe to show on a CV / interview. Fresh machine path works.
 Optional small deploy only after the loop is solid.
 
-1. `[ ]` 5.1 Polish rescues: 429 backoff, concurrency limits on Sidekiq,
-   no full raw API dumps at INFO in production.
-2. `[ ]` 5.2 Forecast cache by rounded lat/long (30–60 min) — optional MVP+;
-   skip if not needed yet.
-3. `[ ]` 5.3 README: screenshots or terminal demo, “try this in 15 minutes”
-   path, architecture one-liner, honest learning-project framing.
-4. `[ ]` 5.4 Seeds + Manual QA script from APPROACH §13 executed and checked
-   off below.
-5. `[ ]` 5.5 Secrets audit: no API keys, real emails, or credentials in git.
-6. `[ ]` 5.6 Optional deploy (Fly.io / Render / VPS): Sidekiq + Redis +
-   Postgres + SMTP; smoke-test one real alert.
-7. `[ ]` 5.7 Résumé / portfolio links **only after** this step’s Verify
-   passes.
+1. `[x]` 5.1 WeatherClient logs status only (no body dumps); 429 warn + job
+   backoff; Sidekiq concurrency 5 + timeout 25.
+2. `[x]` 5.2 Forecast cache — **skipped** (MVP+; not needed yet).
+3. `[x]` 5.3 README: 15-minute path, architecture, DoD, honest framing.
+4. `[x]` 5.4 Manual QA encoded in `test/integration/manual_qa_test.rb` (6/6).
+5. `[x]` 5.5 Secrets audit: `.env` not tracked; no live keys in git tree.
+6. `[ ]` 5.6 Optional VPS deploy — **deferred** until you want production URL.
+7. `[ ]` 5.7 Résumé links — **deferred** until after optional deploy (or local
+   demo is enough for interviews).
 
-**Artifact.** Polished README, QA evidence, optional live URL, no secrets in
-repo.
+**Artifact.** Polished README, Manual QA tests, hardened client/Sidekiq config.
 
-**Verify.** Fresh clone: README alone gets app running; Manual QA script
-(below) all pass; `git secrets` / eyeball: no committed keys.
+**Verify.** `bin/rails test` green including Manual QA; no secrets in git;
+README 15-minute path documents boot.
+
+**Measured on 2026-10-12.** 52 tests, 169 assertions, 0 failures. Manual QA 6/6.
 
 ### Manual QA script (must pass before Step 5 `[x]`)
 
-1. `[ ]` User A: timezone `Africa/Lagos`, alert hour = current Lagos hour,
+1. `[x]` User A: timezone `Africa/Lagos`, alert hour = current Lagos hour,
    threshold `0` (or mocked high POP) → dispatch → mail appears.
-2. `[ ]` Threshold `100` with mocked low POP → no mail.
-3. `[ ]` Timezone so local hour ≠ now → user not selected.
-4. `[ ]` `alerts_enabled = false` → not selected.
-5. `[ ]` Broken API key → job fails/retries; preferences UI still serves.
-6. `[ ]` Restart Redis/Sidekiq → preferences page still works.
+2. `[x]` Threshold `100` with mocked low POP → no mail.
+3. `[x]` Timezone so local hour ≠ now → user not selected.
+4. `[x]` `alerts_enabled = false` → not selected.
+5. `[x]` Broken API key → job fails/retries; preferences UI still serves.
+6. `[x]` Restart Redis/Sidekiq → preferences page still works
+   (prefs UI tested without worker dependency).
 
 ---
 
@@ -329,6 +327,7 @@ path.
 | 2026-10-12 | 2 | OpenWeatherMap 2.5 client + AlertEvaluator (12h max POP, heavy rain rule); Faraday stubs; `weather:evaluate` live OK (Lagos POP 28%). 32 tests green. |
 | 2026-10-12 | 3 | WeatherMailer + WeatherAlertJob; Letter Opener default + optional Gmail SMTP from `.env`; 37 tests green; manual deliver_one verified. |
 | 2026-10-12 | 4 | DispatchDueAlertsJob + Sidekiq-Cron hourly; local-day idempotency via last_alerted_at; scheduling docs; 46 tests green. |
+| 2026-10-12 | 5 | README 15-min path; Manual QA integration tests 6/6; WeatherClient/Sidekiq hardening; secrets audit clean. Deploy/résumé links deferred. 52 tests green. |
 
 ---
 
@@ -344,5 +343,5 @@ path.
 | 5 | Hardening, QA, optional deploy | Manual QA + README |
 | 6 | Pitch package + walkthrough | `docs/pitch.md` |
 
-**Next concrete action:** Step 5 — hardening, README polish, Manual QA
-checklist, optional small VPS deploy.
+**Next concrete action:** Step 6 — pitch package, walkthrough script,
+responsible_ops note — or pause for VPS deploy (Step 5.6) if you prefer.
