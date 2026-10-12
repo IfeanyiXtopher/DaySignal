@@ -85,6 +85,18 @@ EMAIL=demo@weathercheck.local bin/rails alerts:deliver_one
 Sidekiq path (async): `WeatherAlertJob.perform_later(user.id)` with
 `bundle exec sidekiq -C config/sidekiq.yml` running.
 
+### Hourly dispatch (Step 4)
+
+With Sidekiq running, Sidekiq-Cron loads `config/schedule.yml` and runs
+`DispatchDueAlertsJob` at the top of every hour. Manual once:
+
+```bash
+bin/rails alerts:dispatch
+```
+
+Only users whose **local** alert hour matches are enqueued (see
+[`docs/scheduling.md`](docs/scheduling.md)).
+
 ## Layout (where logic will live)
 
 ```
