@@ -1,7 +1,7 @@
-# WeatherCheck — MVP Step-by-Step Approach
+# DaySignal — MVP Step-by-Step Approach
 
-**Project name:** WeatherCheck  
-**Repository / folder name:** `WeatherCheck`
+**Project name:** DaySignal  
+**Repository / folder name:** `DaySignal`
 
 **Product (MVP):** A timezone-aware weather alert delivery service. Users save a location, a local alert time, a timezone, and a rain threshold. An hourly scheduler selects only users due in the current local hour, fetches a forecast for their location, applies threshold rules, and sends an email asynchronously.
 
@@ -118,7 +118,7 @@ APP_HOST=localhost:3000
 ## 3. Repository layout (target)
 
 ```
-WeatherCheck/
+DaySignal/
 ├── APPROACH.md                 # this document
 ├── README.md
 ├── Gemfile
@@ -348,7 +348,7 @@ Stub the weather API in tests. Do not hit the network in CI.
 
 Steps:
 
-1. `rails new WeatherCheck -d postgresql` (or equivalent).
+1. `rails new DaySignal -d postgresql` (or equivalent).
 2. Add Sidekiq, Redis, Sidekiq-Cron, Faraday, dotenv/credentials.
 3. Write `README.md`: setup, `bin/dev`, Sidekiq, Redis.
 4. Commit `APPROACH.md` (this file).
@@ -491,7 +491,7 @@ Plus:
 
 ## 14. Mapping to Simple / RTSL learning goals
 
-| WeatherCheck piece | Skill transfer |
+| DaySignal piece | Skill transfer |
 |-----------------|----------------|
 | ActiveRecord models + migrations | Simple server models |
 | Sidekiq jobs | Async work, sync-adjacent patterns |
@@ -546,7 +546,7 @@ Keep the README honest: this is a **learning production Rails app**, not a meteo
 
 ## 18. Decisions already made
 
-1. Product name is **WeatherCheck** (weather alert delivery, not umbrella gimmicks).
+1. Product name is **DaySignal** (weather alert delivery, not umbrella gimmicks).
 2. Stack: **Rails + PostgreSQL + Sidekiq + Redis + Sidekiq-Cron + Action Mailer + Faraday + Hotwire**.
 3. Decisions are **code rules**, not LLM.
 4. Scheduling is **timezone-aware hourly** dispatch.

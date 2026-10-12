@@ -1,7 +1,7 @@
 namespace :weather do
-  desc "Fetch forecast + print AlertEvaluator decision for a user (EMAIL=demo@weathercheck.local)"
+  desc "Fetch forecast + print AlertEvaluator decision for a user (EMAIL=demo@daysignal.local)"
   task evaluate: :environment do
-    email = ENV.fetch("EMAIL", "demo@weathercheck.local")
+    email = ENV.fetch("EMAIL", "demo@daysignal.local")
     user = User.find_by!(email_address: email)
 
     unless user.preferences_complete?

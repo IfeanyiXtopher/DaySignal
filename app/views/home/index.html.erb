@@ -1,26 +1,160 @@
-<% content_for :title, "WeatherCheck" %>
+<% content_for :title, "DaySignal" %>
 
-<section class="panel">
-  <h1>WeatherCheck</h1>
-  <p class="lede">Timezone-aware weather alert delivery. Thresholds decided by code — not an LLM.</p>
+<div class="explorer"
+     data-controller="globe-explorer theme"
+     data-globe-explorer-conditions-url-value="<%= conditions_path %>"
+     data-globe-explorer-search-url-value="<%= conditions_search_path %>"
+     data-globe-explorer-geocode-url-value="<%= geocode_path %>"
+     data-globe-explorer-mapbox-token-value="<%= @mapbox_token %>"
+     data-globe-explorer-weather-tile-url-value="/tiles/__LAYER__/{z}/{x}/{y}">
 
-  <% if @user %>
-    <p class="status"><%= @user.alert_status_summary %></p>
-    <% if @user.preferences_complete? %>
-      <p class="muted">
-        <%= @user.location_label %>
-        (<%= number_with_precision(@user.latitude, precision: 4) %>,
-         <%= number_with_precision(@user.longitude, precision: 4) %>)
-        · threshold <%= @user.rain_threshold %>%
-      </p>
-    <% end %>
-    <p>
-      <%= link_to "Edit preferences", edit_preferences_path, class: "button" %>
-    </p>
-  <% else %>
-    <p>
-      <%= link_to "Sign up", new_registration_path, class: "button" %>
-      <%= link_to "Sign in", new_session_path, class: "button button-secondary" %>
-    </p>
-  <% end %>
-</section>
+  <div class="explorer__globe" role="img" aria-label="Interactive Earth map">
+    <div class="explorer__map" data-globe-explorer-target="globe"></div>
+  </div>
+
+  <header class="explorer__top">
+    <div class="explorer__brand">
+      <%= link_to root_path, class: "explorer__logo-link", aria: { label: "DaySignal home" } do %>
+        <%= image_tag "brand/logo-light.jpeg",
+              alt: "DaySignal",
+              class: "explorer__logo explorer__logo--light brand-logo--light" %>
+        <%= image_tag "brand/logo-dark.jpeg",
+              alt: "DaySignal",
+              class: "explorer__logo explorer__logo--dark brand-logo--dark" %>
+      <% end %>
+    </div>
+
+    <form class="explorer__search" data-action="submit->globe-explorer#searchSubmit">
+      <input type="search"
+             name="q"
+             placeholder="Search locations"
+             autocomplete="off"
+             data-globe-explorer-target="query"
+             data-action="input->globe-explorer#searchSuggest">
+      <button type="button"
+              class="explorer__icon-btn"
+              title="Use my location"
+              aria-label="Use my location"
+              data-action="globe-explorer#locate">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button type="submit" class="explorer__search-go" aria-label="Search">Search</button>
+    </form>
+
+    <ul class="explorer__suggest" data-globe-explorer-target="suggest" hidden></ul>
+
+    <nav class="explorer__nav">
+      <button type="button"
+              class="theme-toggle explorer__theme"
+              data-theme-target="button"
+              data-action="theme#toggle"
+              aria-label="Switch theme">
+        <span data-theme-target="label">Dark</span>
+      </button>
+      <% if authenticated? %>
+        <%= link_to "Preferences", edit_preferences_path, class: "explorer__nav-link" %>
+        <%= button_to "Sign out", session_path, method: :delete, class: "explorer__nav-link explorer__nav-link--btn" %>
+      <% else %>
+        <%= link_to "Sign in", new_session_path, class: "explorer__nav-link" %>
+        <%= link_to "Get alerts", new_registration_path, class: "explorer__cta" %>
+      <% end %>
+    </nav>
+  </header>
+
+  <aside class="explorer__panel" data-globe-explorer-target="panel">
+    <div class="explorer__panel-head">
+      <div>
+        <p class="explorer__eyebrow">Local weather</p>
+        <h1 data-globe-explorer-target="place">Finding you…</h1>
+        <p class="explorer__coords" data-globe-explorer-target="coords">—</p>
+      </div>
+      <button type="button"
+              class="explorer__icon-btn"
+              aria-label="Close panel"
+              data-action="globe-explorer#closePanel">×</button>
+    </div>
+
+    <div class="explorer__tabs" role="tablist">
+      <button type="button" class="is-active" data-tab="conditions">Conditions</button>
+      <button type="button" disabled title="Coming with alert prefs">Forecast</button>
+    </div>
+
+    <div class="explorer__conditions" data-globe-explorer-target="conditions">
+      <div class="explorer__temp-row">
+        <div>
+          <p class="explorer__temp" data-globe-explorer-target="temp">—°</p>
+          <p class="explorer__summary" data-globe-explorer-target="summary">Allow location or click the map</p>
+        </div>
+        <img data-globe-explorer-target="icon"
+             class="explorer__weather-icon"
+             alt=""
+             hidden>
+      </div>
+
+      <dl class="explorer__metrics">
+        <div>
+          <dt>Feels like</dt>
+          <dd data-globe-explorer-target="feels">—</dd>
+        </div>
+        <div>
+          <dt>Humidity</dt>
+          <dd data-globe-explorer-target="humidity">—</dd>
+        </div>
+        <div>
+          <dt>Wind</dt>
+          <dd data-globe-explorer-target="wind">—</dd>
+        </div>
+      </dl>
+
+      <p class="explorer__status" data-globe-explorer-target="status" hidden></p>
+
+      <% if @user&.preferences_complete? %>
+        <p class="explorer__alert-chip"><%= @user.alert_status_summary %></p>
+        <%= link_to "Edit alert preferences", edit_preferences_path, class: "explorer__panel-cta" %>
+      <% elsif @user %>
+        <%= link_to "Set up alerts for this spot", edit_preferences_path, class: "explorer__panel-cta" %>
+      <% else %>
+        <%= link_to "Get alerts for this spot", new_registration_path, class: "explorer__panel-cta" %>
+      <% end %>
+    </div>
+  </aside>
+
+  <aside class="explorer__layers" aria-label="Map layers">
+    <p class="explorer__layers-title">Layers</p>
+    <button type="button" class="explorer__layer is-active" data-action="globe-explorer#setLayer" data-layer="temperatures">
+      <span>Temperatures</span>
+      <span class="explorer__layer-swatch explorer__layer-swatch--temp" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="explorer__layer" data-action="globe-explorer#setLayer" data-layer="wind">
+      <span>Wind</span>
+      <span class="explorer__layer-swatch explorer__layer-swatch--wind" aria-hidden="true"></span>
+    </button>
+    <button type="button" class="explorer__layer" data-action="globe-explorer#setLayer" data-layer="night">
+      <span>Night</span>
+      <span class="explorer__layer-swatch explorer__layer-swatch--night" aria-hidden="true"></span>
+    </button>
+  </aside>
+
+  <div class="explorer__controls">
+    <button type="button" data-action="globe-explorer#zoomIn" aria-label="Zoom in">+</button>
+    <button type="button" data-action="globe-explorer#zoomOut" aria-label="Zoom out">−</button>
+    <button type="button" data-action="globe-explorer#resetView" aria-label="Reset view">⌂</button>
+  </div>
+
+  <div class="explorer__timeline">
+    <button type="button"
+            class="explorer__play"
+            data-action="globe-explorer#toggleSpin"
+            data-globe-explorer-target="play"
+            aria-label="Toggle gentle globe spin">▶</button>
+    <div class="explorer__timeline-track">
+      <span data-globe-explorer-target="clock"><%= Time.current.strftime("%a, %b %-d, %-l:%M %P") %></span>
+      <div class="explorer__timeline-bar" aria-hidden="true"><i data-globe-explorer-target="scrub"></i></div>
+    </div>
+  </div>
+
+  <p class="explorer__hint" data-globe-explorer-target="hint">Scroll to zoom · Mapbox place labels · click for weather</p>
+</div>

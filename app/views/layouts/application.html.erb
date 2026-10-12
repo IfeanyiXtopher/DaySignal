@@ -1,15 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "WeatherCheck" %></title>
+    <title><%= content_for(:title) || "DaySignal" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="WeatherCheck">
+    <meta name="application-name" content="DaySignal">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="color-scheme" content="light dark">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
+
+    <script>
+      (function () {
+        try {
+          var key = "daysignal-theme";
+          var stored = localStorage.getItem(key);
+          var theme = stored === "light" || stored === "dark"
+            ? stored
+            : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {}
+      })();
+    </script>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -20,10 +35,24 @@
   </head>
 
   <body>
-    <header class="site-header">
+    <header class="site-header" data-controller="theme">
       <div class="site-header__inner">
-        <%= link_to "WeatherCheck", root_path, class: "brand" %>
+        <%= link_to root_path, class: "brand", aria: { label: "DaySignal home" } do %>
+          <%= image_tag "brand/logo-light.jpeg",
+                alt: "DaySignal — Get Instant Weather Alerts",
+                class: "brand-logo brand-logo--light" %>
+          <%= image_tag "brand/logo-dark.jpeg",
+                alt: "DaySignal — Get Instant Weather Alerts",
+                class: "brand-logo brand-logo--dark" %>
+        <% end %>
         <nav>
+          <button type="button"
+                  class="theme-toggle"
+                  data-theme-target="button"
+                  data-action="theme#toggle"
+                  aria-label="Switch theme">
+            <span data-theme-target="label">Dark</span>
+          </button>
           <% if authenticated? %>
             <%= link_to "Preferences", edit_preferences_path %>
             <%= button_to "Sign out", session_path, method: :delete, class: "linkish" %>

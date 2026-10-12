@@ -1,5 +1,5 @@
 # Demo user for local walkthrough (fake email only — never a real person).
-demo = User.find_or_initialize_by(email_address: "demo@weathercheck.local")
+demo = User.find_or_initialize_by(email_address: "demo@daysignal.local")
 demo.password = "password123"
 demo.location_label = "Lagos, Nigeria"
 demo.latitude = 6.5244

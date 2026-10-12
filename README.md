@@ -1,4 +1,4 @@
-# WeatherCheck
+# DaySignal
 
 Timezone-aware **weather alert delivery** for learning production Rails.
 
@@ -13,20 +13,22 @@ learning app with a real end-to-end loop.
 
 ## Contents
 
-- [15-minute local demo](#15-minute-local-demo)
-- [Architecture](#architecture)
-- [Stack](#stack)
-- [Docs](#docs)
-- [Manual checks](#manual-checks)
-- [Definition of done (MVP)](#definition-of-done-mvp)
-- [Layout](#layout)
-- [Environment](#environment)
+1. [15-minute local demo](#15-minute-local-demo)
+2. [Demo flow](#demo-flow)
+3. [Architecture](#architecture)
+4. [Stack](#stack)
+5. [Docs](#docs)
+6. [Manual checks](#manual-checks)
+7. [Definition of done (MVP)](#definition-of-done-mvp)
+8. [Layout](#layout)
+9. [Environment](#environment)
+10. [Current build step](#current-build-step)
 
 ## 15-minute local demo
 
 ```bash
 # Prerequisites: rbenv Ruby 3.3.12, Docker Desktop, Redis
-git clone <your-fork-or-path> WeatherCheck && cd WeatherCheck
+git clone <your-fork-or-path> DaySignal && cd DaySignal
 cp .env.example .env   # add WEATHER_API_KEY (and SMTP later if you want)
 
 docker compose up -d
@@ -43,15 +45,32 @@ bin/rails server
 bundle exec sidekiq -C config/sidekiq.yml
 ```
 
-1. Open http://localhost:3000 — sign in as `demo@weathercheck.local` / `password123`
-2. Confirm preferences (Lagos, 07:00, threshold 50%)
+1. Open http://localhost:3000 — sign in as `demo@daysignal.local` / `password123`
+2. Confirm preferences (Lagos, 07:00, threshold 50%) — or search a city; lat/lng/timezone autofill
 3. Health: http://localhost:3000/up
-4. Optional live forecast: `EMAIL=demo@weathercheck.local bin/rails weather:evaluate`
+4. Optional live forecast: `EMAIL=demo@daysignal.local bin/rails weather:evaluate`
 5. Optional email preview: lower threshold to `0` in the UI, then
-   `EMAIL=demo@weathercheck.local bin/rails alerts:deliver_one`
+   `EMAIL=demo@daysignal.local bin/rails alerts:deliver_one`
    (Letter Opener opens a browser tab; set `MAILER_DELIVERY_METHOD=smtp` for Gmail)
 
 Automated safety net: `bin/rails test` (includes Manual QA scenarios).
+
+Spoken demo script: [`docs/walkthrough.md`](docs/walkthrough.md).
+
+## Demo flow
+
+```mermaid
+flowchart LR
+  A[Sign up / Sign in] --> B[Save preferences]
+  B --> C[Sidekiq-Cron hourly]
+  C --> D{Local hour matches?}
+  D -->|no| E[Skip]
+  D -->|yes| F[WeatherAlertJob]
+  F --> G[OpenWeatherMap]
+  G --> H{AlertEvaluator}
+  H -->|trigger| I[Email]
+  H -->|pass| J[Silent]
+```
 
 ## Architecture
 
@@ -83,6 +102,9 @@ Action Mailer · Hotwire (Turbo + Stimulus) · ERB
 | --- | --- |
 | [`APPROACH.md`](APPROACH.md) | Product rules and architecture bible |
 | [`docs/BUILD_PLAN.md`](docs/BUILD_PLAN.md) | Step tracker — read *Current position* first |
+| [`docs/pitch.md`](docs/pitch.md) | Interview pitch: use cases → files → Simple skills |
+| [`docs/walkthrough.md`](docs/walkthrough.md) | 5–7 minute live/recording script |
+| [`docs/responsible_ops.md`](docs/responsible_ops.md) | Secrets, PII, retries, hard “never” rules |
 | [`docs/adr/`](docs/adr/) | Architecture decision records |
 | [`docs/definitions.md`](docs/definitions.md) | Forecast window + trigger rules |
 | [`docs/scheduling.md`](docs/scheduling.md) | Timezone dispatch details |
@@ -107,31 +129,37 @@ bin/rails test test/integration/manual_qa_test.rb
 
 ## Definition of done (MVP)
 
-A user can:
+Checklist for “this is demoable”:
 
-1. Create an account and sign in
-2. Save location, timezone, alert time, rain threshold
-3. Be selected by the hourly dispatcher in their local hour
-4. Receive email when the threshold is met (Letter Opener or SMTP)
-5. Receive nothing when it is not
-6. Turn alerts off and stop being selected
-
-Plus: Sidekiq + Redis jobs, timezone tests, weather stubbed in CI, README enough
-to run locally. **Optional VPS deploy** is separate (see BUILD_PLAN Step 5.6).
+- [x] Create an account and sign in
+- [x] Save location, timezone, alert time, rain threshold (search or manual lat/lng)
+- [x] Selected by the hourly dispatcher in the user’s local hour
+- [x] Email when the threshold is met (Letter Opener or SMTP)
+- [x] No email when the threshold is not met
+- [x] Turn alerts off → stop being selected
+- [x] Jobs via Sidekiq + Redis; Sidekiq-Cron schedule present
+- [x] Timezone + Manual QA tests green (`bin/rails test`)
+- [x] Weather API stubbed in CI (no live network in automated tests)
+- [x] README enough for a third party to run locally in ~15 minutes
+- [x] Pitch package: [`docs/pitch.md`](docs/pitch.md), walkthrough, responsible ops
+- [ ] Optional VPS deploy with public URL (BUILD_PLAN Step 5.6)
+- [ ] Résumé / portfolio links after deploy or local-demo preference (Step 5.7)
 
 ## Layout
 
 ```
 app/
   models/          # User + alert preferences
-  services/        # WeatherClient, Forecast, AlertEvaluator
+  services/        # WeatherClient, Forecast, AlertEvaluator, geocoding
   jobs/            # DispatchDueAlertsJob, WeatherAlertJob
   mailers/         # WeatherMailer
-  controllers/     # Auth + preferences
+  controllers/     # Auth, preferences, geocodings
+  javascript/      # Stimulus (location picker, theme)
 config/
   sidekiq.yml      # concurrency capped for small hosts
   schedule.yml     # hourly cron
 docker-compose.yml # Postgres 16 → host :5433
+docs/              # pitch, walkthrough, ADRs, scheduling
 ```
 
 ## Environment

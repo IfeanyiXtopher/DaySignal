@@ -6,7 +6,7 @@ Accepted — 2026-10-11
 
 ## Context
 
-WeatherCheck is a learning MVP that practices production Rails patterns used by
+DaySignal is a learning MVP that practices production Rails patterns used by
 systems like Simple (Resolve to Save Lives): models, background jobs, cron,
 mailers, and a small Hotwire UI. It will run locally and later on a small VPS.
 
