@@ -2,8 +2,8 @@
 # check=error=true
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t weather_check .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name weather_check weather_check
+# docker build -t day_signal .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name day_signal day_signal
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 

@@ -1,7 +1,7 @@
 namespace :alerts do
-  desc "Run WeatherAlertJob for one user (EMAIL=demo@weathercheck.local). Uses Letter Opener unless MAILER_DELIVERY_METHOD=smtp."
+  desc "Run WeatherAlertJob for one user (EMAIL=demo@daysignal.local). Uses Letter Opener unless MAILER_DELIVERY_METHOD=smtp."
   task deliver_one: :environment do
-    email = ENV.fetch("EMAIL", "demo@weathercheck.local")
+    email = ENV.fetch("EMAIL", "demo@daysignal.local")
     user = User.find_by!(email_address: email)
     puts "Running WeatherAlertJob for #{user.email_address} (id=#{user.id})..."
     # perform_now so you see Letter Opener / SMTP result immediately in this terminal.

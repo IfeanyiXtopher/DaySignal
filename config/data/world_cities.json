@@ -1,0 +1,1022 @@
+[
+  {
+    "name": "Lagos",
+    "lat": 6.5244,
+    "lng": 3.3792,
+    "rank": 1
+  },
+  {
+    "name": "London",
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "rank": 1
+  },
+  {
+    "name": "New York",
+    "lat": 40.7128,
+    "lng": -74.006,
+    "rank": 1
+  },
+  {
+    "name": "Paris",
+    "lat": 48.8566,
+    "lng": 2.3522,
+    "rank": 1
+  },
+  {
+    "name": "Tokyo",
+    "lat": 35.6762,
+    "lng": 139.6503,
+    "rank": 1
+  },
+  {
+    "name": "Mumbai",
+    "lat": 19.076,
+    "lng": 72.8777,
+    "rank": 1
+  },
+  {
+    "name": "Cairo",
+    "lat": 30.0444,
+    "lng": 31.2357,
+    "rank": 1
+  },
+  {
+    "name": "S\u00e3o Paulo",
+    "lat": -23.5505,
+    "lng": -46.6333,
+    "rank": 1
+  },
+  {
+    "name": "Sydney",
+    "lat": -33.8688,
+    "lng": 151.2093,
+    "rank": 1
+  },
+  {
+    "name": "Los Angeles",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "rank": 1
+  },
+  {
+    "name": "Moscow",
+    "lat": 55.7558,
+    "lng": 37.6173,
+    "rank": 1
+  },
+  {
+    "name": "Beijing",
+    "lat": 39.9042,
+    "lng": 116.4074,
+    "rank": 1
+  },
+  {
+    "name": "Johannesburg",
+    "lat": -26.2041,
+    "lng": 28.0473,
+    "rank": 1
+  },
+  {
+    "name": "Mexico City",
+    "lat": 19.4326,
+    "lng": -99.1332,
+    "rank": 1
+  },
+  {
+    "name": "Dubai",
+    "lat": 25.2048,
+    "lng": 55.2708,
+    "rank": 1
+  },
+  {
+    "name": "Singapore",
+    "lat": 1.3521,
+    "lng": 103.8198,
+    "rank": 1
+  },
+  {
+    "name": "Istanbul",
+    "lat": 41.0082,
+    "lng": 28.9784,
+    "rank": 1
+  },
+  {
+    "name": "Toronto",
+    "lat": 43.6532,
+    "lng": -79.3832,
+    "rank": 1
+  },
+  {
+    "name": "Nairobi",
+    "lat": -1.2921,
+    "lng": 36.8219,
+    "rank": 1
+  },
+  {
+    "name": "Buenos Aires",
+    "lat": -34.6037,
+    "lng": -58.3816,
+    "rank": 1
+  },
+  {
+    "name": "Abuja",
+    "lat": 9.0765,
+    "lng": 7.3986,
+    "rank": 2
+  },
+  {
+    "name": "Accra",
+    "lat": 5.6037,
+    "lng": -0.187,
+    "rank": 2
+  },
+  {
+    "name": "Abidjan",
+    "lat": 5.36,
+    "lng": -4.0083,
+    "rank": 2
+  },
+  {
+    "name": "Dakar",
+    "lat": 14.7167,
+    "lng": -17.4677,
+    "rank": 2
+  },
+  {
+    "name": "Casablanca",
+    "lat": 33.5731,
+    "lng": -7.5898,
+    "rank": 2
+  },
+  {
+    "name": "Addis Ababa",
+    "lat": 9.032,
+    "lng": 38.7469,
+    "rank": 2
+  },
+  {
+    "name": "Cape Town",
+    "lat": -33.9249,
+    "lng": 18.4241,
+    "rank": 2
+  },
+  {
+    "name": "Kinshasa",
+    "lat": -4.4419,
+    "lng": 15.2663,
+    "rank": 2
+  },
+  {
+    "name": "Luanda",
+    "lat": -8.839,
+    "lng": 13.2894,
+    "rank": 2
+  },
+  {
+    "name": "Berlin",
+    "lat": 52.52,
+    "lng": 13.405,
+    "rank": 2
+  },
+  {
+    "name": "Madrid",
+    "lat": 40.4168,
+    "lng": -3.7038,
+    "rank": 2
+  },
+  {
+    "name": "Rome",
+    "lat": 41.9028,
+    "lng": 12.4964,
+    "rank": 2
+  },
+  {
+    "name": "Amsterdam",
+    "lat": 52.3676,
+    "lng": 4.9041,
+    "rank": 2
+  },
+  {
+    "name": "Stockholm",
+    "lat": 59.3293,
+    "lng": 18.0686,
+    "rank": 2
+  },
+  {
+    "name": "Riyadh",
+    "lat": 24.7136,
+    "lng": 46.6753,
+    "rank": 2
+  },
+  {
+    "name": "Tehran",
+    "lat": 35.6892,
+    "lng": 51.389,
+    "rank": 2
+  },
+  {
+    "name": "Karachi",
+    "lat": 24.8607,
+    "lng": 67.0011,
+    "rank": 2
+  },
+  {
+    "name": "Delhi",
+    "lat": 28.6139,
+    "lng": 77.209,
+    "rank": 2
+  },
+  {
+    "name": "Bangkok",
+    "lat": 13.7563,
+    "lng": 100.5018,
+    "rank": 2
+  },
+  {
+    "name": "Jakarta",
+    "lat": -6.2088,
+    "lng": 106.8456,
+    "rank": 2
+  },
+  {
+    "name": "Manila",
+    "lat": 14.5995,
+    "lng": 120.9842,
+    "rank": 2
+  },
+  {
+    "name": "Hong Kong",
+    "lat": 22.3193,
+    "lng": 114.1694,
+    "rank": 2
+  },
+  {
+    "name": "Shanghai",
+    "lat": 31.2304,
+    "lng": 121.4737,
+    "rank": 2
+  },
+  {
+    "name": "Seoul",
+    "lat": 37.5665,
+    "lng": 126.978,
+    "rank": 2
+  },
+  {
+    "name": "Melbourne",
+    "lat": -37.8136,
+    "lng": 144.9631,
+    "rank": 2
+  },
+  {
+    "name": "Chicago",
+    "lat": 41.8781,
+    "lng": -87.6298,
+    "rank": 2
+  },
+  {
+    "name": "Miami",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "rank": 2
+  },
+  {
+    "name": "San Francisco",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "rank": 2
+  },
+  {
+    "name": "Vancouver",
+    "lat": 49.2827,
+    "lng": -123.1207,
+    "rank": 2
+  },
+  {
+    "name": "Lima",
+    "lat": -12.0464,
+    "lng": -77.0428,
+    "rank": 2
+  },
+  {
+    "name": "Bogot\u00e1",
+    "lat": 4.711,
+    "lng": -74.0721,
+    "rank": 2
+  },
+  {
+    "name": "Rio",
+    "lat": -22.9068,
+    "lng": -43.1729,
+    "rank": 2
+  },
+  {
+    "name": "Santiago",
+    "lat": -33.4489,
+    "lng": -70.6693,
+    "rank": 2
+  },
+  {
+    "name": "Reykjavik",
+    "lat": 64.1466,
+    "lng": -21.9426,
+    "rank": 2
+  },
+  {
+    "name": "Helsinki",
+    "lat": 60.1699,
+    "lng": 24.9384,
+    "rank": 2
+  },
+  {
+    "name": "Athens",
+    "lat": 37.9838,
+    "lng": 23.7275,
+    "rank": 2
+  },
+  {
+    "name": "Dublin",
+    "lat": 53.3498,
+    "lng": -6.2603,
+    "rank": 2
+  },
+  {
+    "name": "Washington",
+    "lat": 38.9072,
+    "lng": -77.0369,
+    "rank": 2
+  },
+  {
+    "name": "Boston",
+    "lat": 42.3601,
+    "lng": -71.0589,
+    "rank": 2
+  },
+  {
+    "name": "Houston",
+    "lat": 29.7604,
+    "lng": -95.3698,
+    "rank": 2
+  },
+  {
+    "name": "Seattle",
+    "lat": 47.6062,
+    "lng": -122.3321,
+    "rank": 2
+  },
+  {
+    "name": "Perth",
+    "lat": -31.9505,
+    "lng": 115.8605,
+    "rank": 2
+  },
+  {
+    "name": "Khartoum",
+    "lat": 15.5007,
+    "lng": 32.5599,
+    "rank": 2
+  },
+  {
+    "name": "Kampala",
+    "lat": 0.3476,
+    "lng": 32.5825,
+    "rank": 2
+  },
+  {
+    "name": "Dar es Salaam",
+    "lat": -6.7924,
+    "lng": 39.2083,
+    "rank": 2
+  },
+  {
+    "name": "Algiers",
+    "lat": 36.7538,
+    "lng": 3.0588,
+    "rank": 2
+  },
+  {
+    "name": "Tunis",
+    "lat": 36.8065,
+    "lng": 10.1815,
+    "rank": 2
+  },
+  {
+    "name": "Tripoli",
+    "lat": 32.8872,
+    "lng": 13.1913,
+    "rank": 2
+  },
+  {
+    "name": "Ibadan",
+    "lat": 7.3775,
+    "lng": 3.947,
+    "rank": 3
+  },
+  {
+    "name": "Kano",
+    "lat": 12.0022,
+    "lng": 8.592,
+    "rank": 3
+  },
+  {
+    "name": "Port Harcourt",
+    "lat": 4.8156,
+    "lng": 7.0498,
+    "rank": 3
+  },
+  {
+    "name": "Benin City",
+    "lat": 6.335,
+    "lng": 5.6037,
+    "rank": 3
+  },
+  {
+    "name": "Enugu",
+    "lat": 6.5244,
+    "lng": 7.5106,
+    "rank": 3
+  },
+  {
+    "name": "Kaduna",
+    "lat": 10.5105,
+    "lng": 7.4165,
+    "rank": 3
+  },
+  {
+    "name": "Jos",
+    "lat": 9.8965,
+    "lng": 8.8583,
+    "rank": 3
+  },
+  {
+    "name": "Ilorin",
+    "lat": 8.4799,
+    "lng": 4.5418,
+    "rank": 3
+  },
+  {
+    "name": "Abeokuta",
+    "lat": 7.1475,
+    "lng": 3.3619,
+    "rank": 3
+  },
+  {
+    "name": "Cotonou",
+    "lat": 6.3703,
+    "lng": 2.3912,
+    "rank": 3
+  },
+  {
+    "name": "Lom\u00e9",
+    "lat": 6.1256,
+    "lng": 1.2254,
+    "rank": 3
+  },
+  {
+    "name": "Kumasi",
+    "lat": 6.6885,
+    "lng": -1.6244,
+    "rank": 3
+  },
+  {
+    "name": "Ouagadougou",
+    "lat": 12.3714,
+    "lng": -1.5197,
+    "rank": 3
+  },
+  {
+    "name": "Bamako",
+    "lat": 12.6392,
+    "lng": -8.0029,
+    "rank": 3
+  },
+  {
+    "name": "Niamey",
+    "lat": 13.5127,
+    "lng": 2.1125,
+    "rank": 3
+  },
+  {
+    "name": "Agadez",
+    "lat": 16.9742,
+    "lng": 7.9868,
+    "rank": 3
+  },
+  {
+    "name": "Timbuktu",
+    "lat": 16.7666,
+    "lng": -3.0026,
+    "rank": 3
+  },
+  {
+    "name": "Nouakchott",
+    "lat": 18.0735,
+    "lng": -15.9582,
+    "rank": 3
+  },
+  {
+    "name": "Conakry",
+    "lat": 9.6412,
+    "lng": -13.5784,
+    "rank": 3
+  },
+  {
+    "name": "Freetown",
+    "lat": 8.4657,
+    "lng": -13.2317,
+    "rank": 3
+  },
+  {
+    "name": "Monrovia",
+    "lat": 6.3156,
+    "lng": -10.8074,
+    "rank": 3
+  },
+  {
+    "name": "Yaound\u00e9",
+    "lat": 3.848,
+    "lng": 11.5021,
+    "rank": 3
+  },
+  {
+    "name": "Douala",
+    "lat": 4.0511,
+    "lng": 9.7679,
+    "rank": 3
+  },
+  {
+    "name": "Libreville",
+    "lat": 0.4162,
+    "lng": 9.4673,
+    "rank": 3
+  },
+  {
+    "name": "Brazzaville",
+    "lat": -4.2634,
+    "lng": 15.2429,
+    "rank": 3
+  },
+  {
+    "name": "Ndjamena",
+    "lat": 12.1348,
+    "lng": 15.0557,
+    "rank": 3
+  },
+  {
+    "name": "Bangui",
+    "lat": 4.3947,
+    "lng": 18.5582,
+    "rank": 3
+  },
+  {
+    "name": "Kigali",
+    "lat": -1.9441,
+    "lng": 30.0619,
+    "rank": 3
+  },
+  {
+    "name": "Lusaka",
+    "lat": -15.3875,
+    "lng": 28.3228,
+    "rank": 3
+  },
+  {
+    "name": "Harare",
+    "lat": -17.8252,
+    "lng": 31.0335,
+    "rank": 3
+  },
+  {
+    "name": "Maputo",
+    "lat": -25.9692,
+    "lng": 32.5732,
+    "rank": 3
+  },
+  {
+    "name": "Windhoek",
+    "lat": -22.5609,
+    "lng": 17.0658,
+    "rank": 3
+  },
+  {
+    "name": "Gaborone",
+    "lat": -24.6282,
+    "lng": 25.9231,
+    "rank": 3
+  },
+  {
+    "name": "Warsaw",
+    "lat": 52.2297,
+    "lng": 21.0122,
+    "rank": 3
+  },
+  {
+    "name": "Lisbon",
+    "lat": 38.7223,
+    "lng": -9.1393,
+    "rank": 3
+  },
+  {
+    "name": "Montreal",
+    "lat": 45.5017,
+    "lng": -73.5673,
+    "rank": 3
+  },
+  {
+    "name": "Denver",
+    "lat": 39.7392,
+    "lng": -104.9903,
+    "rank": 3
+  },
+  {
+    "name": "Dallas",
+    "lat": 32.7767,
+    "lng": -96.797,
+    "rank": 3
+  },
+  {
+    "name": "Atlanta",
+    "lat": 33.749,
+    "lng": -84.388,
+    "rank": 3
+  },
+  {
+    "name": "Phoenix",
+    "lat": 33.4484,
+    "lng": -112.074,
+    "rank": 3
+  },
+  {
+    "name": "Bangalore",
+    "lat": 12.9716,
+    "lng": 77.5946,
+    "rank": 3
+  },
+  {
+    "name": "Dhaka",
+    "lat": 23.8103,
+    "lng": 90.4125,
+    "rank": 3
+  },
+  {
+    "name": "Osaka",
+    "lat": 34.6937,
+    "lng": 135.5023,
+    "rank": 3
+  },
+  {
+    "name": "Taipei",
+    "lat": 25.033,
+    "lng": 121.5654,
+    "rank": 3
+  },
+  {
+    "name": "Hanoi",
+    "lat": 21.0278,
+    "lng": 105.8342,
+    "rank": 3
+  },
+  {
+    "name": "Ho Chi Minh",
+    "lat": 10.8231,
+    "lng": 106.6297,
+    "rank": 3
+  },
+  {
+    "name": "Kuala Lumpur",
+    "lat": 3.139,
+    "lng": 101.6869,
+    "rank": 3
+  },
+  {
+    "name": "Auckland",
+    "lat": -36.8485,
+    "lng": 174.7633,
+    "rank": 3
+  },
+  {
+    "name": "Brisbane",
+    "lat": -27.4698,
+    "lng": 153.0251,
+    "rank": 3
+  },
+  {
+    "name": "Lahore",
+    "lat": 31.5497,
+    "lng": 74.3436,
+    "rank": 3
+  },
+  {
+    "name": "Islamabad",
+    "lat": 33.6844,
+    "lng": 73.0479,
+    "rank": 3
+  },
+  {
+    "name": "Baghdad",
+    "lat": 33.3152,
+    "lng": 44.3661,
+    "rank": 3
+  },
+  {
+    "name": "Amman",
+    "lat": 31.9454,
+    "lng": 35.9284,
+    "rank": 3
+  },
+  {
+    "name": "Tel Aviv",
+    "lat": 32.0853,
+    "lng": 34.7818,
+    "rank": 3
+  },
+  {
+    "name": "Beirut",
+    "lat": 33.8938,
+    "lng": 35.5018,
+    "rank": 3
+  },
+  {
+    "name": "Alexandria",
+    "lat": 31.2001,
+    "lng": 29.9187,
+    "rank": 3
+  },
+  {
+    "name": "Rabat",
+    "lat": 34.0209,
+    "lng": -6.8416,
+    "rank": 3
+  },
+  {
+    "name": "Marrakesh",
+    "lat": 31.6295,
+    "lng": -7.9811,
+    "rank": 3
+  },
+  {
+    "name": "Gao",
+    "lat": 16.2666,
+    "lng": -0.05,
+    "rank": 3
+  },
+  {
+    "name": "Zinder",
+    "lat": 13.8053,
+    "lng": 8.9881,
+    "rank": 3
+  },
+  {
+    "name": "Maradi",
+    "lat": 13.5,
+    "lng": 7.1017,
+    "rank": 3
+  },
+  {
+    "name": "Bilma",
+    "lat": 18.6853,
+    "lng": 12.9164,
+    "rank": 3
+  },
+  {
+    "name": "Malabo",
+    "lat": 3.75,
+    "lng": 8.7833,
+    "rank": 3
+  },
+  {
+    "name": "Sao Tome",
+    "lat": 0.3365,
+    "lng": 6.7273,
+    "rank": 3
+  },
+  {
+    "name": "Banjul",
+    "lat": 13.4549,
+    "lng": -16.579,
+    "rank": 3
+  },
+  {
+    "name": "Bissau",
+    "lat": 11.8636,
+    "lng": -15.5977,
+    "rank": 3
+  },
+  {
+    "name": "Antananarivo",
+    "lat": -18.8792,
+    "lng": 47.5079,
+    "rank": 3
+  },
+  {
+    "name": "Port Louis",
+    "lat": -20.1609,
+    "lng": 57.5012,
+    "rank": 3
+  },
+  {
+    "name": "Juba",
+    "lat": 4.8594,
+    "lng": 31.5713,
+    "rank": 3
+  },
+  {
+    "name": "Mogadishu",
+    "lat": 2.0469,
+    "lng": 45.3182,
+    "rank": 3
+  },
+  {
+    "name": "Asmara",
+    "lat": 15.3229,
+    "lng": 38.9251,
+    "rank": 3
+  },
+  {
+    "name": "Djibouti",
+    "lat": 11.5721,
+    "lng": 43.1456,
+    "rank": 3
+  },
+  {
+    "name": "Bujumbura",
+    "lat": -3.3614,
+    "lng": 29.3599,
+    "rank": 3
+  },
+  {
+    "name": "Ikeja",
+    "lat": 6.6018,
+    "lng": 3.3515,
+    "rank": 4
+  },
+  {
+    "name": "Lekki",
+    "lat": 6.4698,
+    "lng": 3.5852,
+    "rank": 4
+  },
+  {
+    "name": "Sagamu",
+    "lat": 6.8322,
+    "lng": 3.6319,
+    "rank": 4
+  },
+  {
+    "name": "Badagry",
+    "lat": 6.415,
+    "lng": 2.8813,
+    "rank": 4
+  },
+  {
+    "name": "Ijebu Ode",
+    "lat": 6.8198,
+    "lng": 3.9172,
+    "rank": 4
+  },
+  {
+    "name": "Ife",
+    "lat": 7.4905,
+    "lng": 4.5521,
+    "rank": 4
+  },
+  {
+    "name": "Oyo",
+    "lat": 7.8525,
+    "lng": 3.9313,
+    "rank": 4
+  },
+  {
+    "name": "Osogbo",
+    "lat": 7.7717,
+    "lng": 4.557,
+    "rank": 4
+  },
+  {
+    "name": "Akure",
+    "lat": 7.2571,
+    "lng": 5.2058,
+    "rank": 4
+  },
+  {
+    "name": "Ado-Ekiti",
+    "lat": 7.6233,
+    "lng": 5.2214,
+    "rank": 4
+  },
+  {
+    "name": "Asaba",
+    "lat": 6.2059,
+    "lng": 6.6959,
+    "rank": 4
+  },
+  {
+    "name": "Warri",
+    "lat": 5.516,
+    "lng": 5.75,
+    "rank": 4
+  },
+  {
+    "name": "Calabar",
+    "lat": 4.9757,
+    "lng": 8.3417,
+    "rank": 4
+  },
+  {
+    "name": "Uyo",
+    "lat": 5.0377,
+    "lng": 7.9128,
+    "rank": 4
+  },
+  {
+    "name": "Owerri",
+    "lat": 5.4836,
+    "lng": 7.0333,
+    "rank": 4
+  },
+  {
+    "name": "Lokoja",
+    "lat": 7.8023,
+    "lng": 6.743,
+    "rank": 4
+  },
+  {
+    "name": "Minna",
+    "lat": 9.6152,
+    "lng": 6.5476,
+    "rank": 4
+  },
+  {
+    "name": "Sokoto",
+    "lat": 13.0059,
+    "lng": 5.2476,
+    "rank": 4
+  },
+  {
+    "name": "Katsina",
+    "lat": 12.9908,
+    "lng": 7.6018,
+    "rank": 4
+  },
+  {
+    "name": "Maiduguri",
+    "lat": 11.8311,
+    "lng": 13.151,
+    "rank": 4
+  },
+  {
+    "name": "Porto-Novo",
+    "lat": 6.4969,
+    "lng": 2.6283,
+    "rank": 4
+  },
+  {
+    "name": "Tamale",
+    "lat": 9.4008,
+    "lng": -0.8393,
+    "rank": 4
+  },
+  {
+    "name": "Honolulu",
+    "lat": 21.3069,
+    "lng": -157.8583,
+    "rank": 4
+  },
+  {
+    "name": "Anchorage",
+    "lat": 61.2181,
+    "lng": -149.9003,
+    "rank": 4
+  },
+  {
+    "name": "Colombo",
+    "lat": 6.9271,
+    "lng": 79.8612,
+    "rank": 4
+  },
+  {
+    "name": "Kathmandu",
+    "lat": 27.7172,
+    "lng": 85.324,
+    "rank": 4
+  },
+  {
+    "name": "Tashkent",
+    "lat": 41.2995,
+    "lng": 69.2401,
+    "rank": 4
+  },
+  {
+    "name": "Almaty",
+    "lat": 43.222,
+    "lng": 76.8512,
+    "rank": 4
+  },
+  {
+    "name": "Ulaanbaatar",
+    "lat": 47.8864,
+    "lng": 106.9057,
+    "rank": 4
+  }
+]

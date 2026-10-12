@@ -1,10 +1,15 @@
-<% content_for :title, "Alert preferences — WeatherCheck" %>
+<% content_for :title, "Alert preferences — DaySignal" %>
 
 <section class="panel">
   <h1>Alert preferences</h1>
-  <p class="muted">One location for MVP. Times are in your chosen timezone — not the server clock.</p>
+  <p class="muted">Search a city or use your current location. Coordinates and timezone fill in automatically — you can still edit them.</p>
 
-  <%= form_with model: @user, url: preferences_path, method: :patch, class: "stack" do |form| %>
+  <%= form_with model: @user, url: preferences_path, method: :patch, class: "stack",
+        data: {
+          controller: "location-picker",
+          location_picker_search_url_value: geocode_path,
+          location_picker_reverse_url_value: geocode_reverse_path
+        } do |form| %>
     <% if @user.errors.any? %>
       <div class="flash flash-alert" role="alert">
         <ul>
@@ -15,20 +20,69 @@
       </div>
     <% end %>
 
-    <label>
-      Location label
-      <%= form.text_field :location_label, required: true, placeholder: "Lagos, Nigeria" %>
-    </label>
+    <div class="location-picker">
+      <div class="location-picker__toolbar">
+        <label class="location-picker__search">
+          Search location
+          <input type="search"
+                 autocomplete="off"
+                 placeholder="e.g. Lagos, Nairobi, London"
+                 data-location-picker-target="query"
+                 data-action="input->location-picker#onQueryInput focus->location-picker#onQueryInput blur->location-picker#hideResultsLater"
+                 value="<%= @user.location_label %>">
+        </label>
+        <button type="button"
+                class="button button-secondary location-picker__geo"
+                data-action="location-picker#useMyLocation">
+          Use my location
+        </button>
+      </div>
 
-    <div class="row">
+      <ul class="location-picker__results"
+          data-location-picker-target="results"
+          hidden></ul>
+
+      <p class="location-picker__status"
+         data-location-picker-target="status"
+         <%= "hidden" unless @user.preferences_complete? %>>
+        <% if @user.preferences_complete? %>
+          <%= @user.location_label %> ·
+          <%= number_with_precision(@user.latitude, precision: 4) %>,
+          <%= number_with_precision(@user.longitude, precision: 4) %>
+        <% end %>
+      </p>
+
       <label>
-        Latitude
-        <%= form.number_field :latitude, required: true, step: :any, placeholder: "6.5244" %>
+        Location name
+        <%= form.text_field :location_label, required: true, placeholder: "Chosen place name (editable)",
+              data: { location_picker_target: "label" } %>
       </label>
-      <label>
-        Longitude
-        <%= form.number_field :longitude, required: true, step: :any, placeholder: "3.3792" %>
-      </label>
+
+      <p class="location-picker__hint">
+        <button type="button"
+                class="linkish"
+                data-location-picker-target="coordsToggle"
+                data-action="location-picker#toggleCoords"
+                aria-expanded="false">
+          Edit coordinates manually
+        </button>
+      </p>
+
+      <div class="location-picker__coords stack" data-location-picker-target="coordsPanel" hidden>
+        <div class="row">
+          <label>
+            Latitude
+            <%= form.number_field :latitude, required: true, step: :any, placeholder: "6.5244",
+                  data: { location_picker_target: "latitude", action: "input->location-picker#onCoordsChanged" } %>
+          </label>
+          <label>
+            Longitude
+            <%= form.number_field :longitude, required: true, step: :any, placeholder: "3.3792",
+                  data: { location_picker_target: "longitude", action: "input->location-picker#onCoordsChanged" } %>
+          </label>
+        </div>
+        <p class="muted">Advanced: paste exact coordinates if search misses your spot.</p>
+      </div>
     </div>
 
     <label>
@@ -36,7 +90,8 @@
       <%= form.select :timezone,
             User.timezone_options,
             { include_blank: "Select timezone" },
-            required: true %>
+            required: true,
+            data: { location_picker_target: "timezone" } %>
     </label>
 
     <label>
@@ -54,6 +109,6 @@
       Alerts enabled
     </label>
 
-    <%= form.submit "Save preferences", class: "button" %>
+    <%= form.button "Save preferences", type: :submit, class: "button" %>
   <% end %>
 </section>

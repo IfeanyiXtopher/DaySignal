@@ -1,4 +1,4 @@
-# Local (and later VPS) data services for WeatherCheck.
+# Local (and later VPS) data services for DaySignal.
 # Rails runs on the host in development; only Postgres is containerized here.
 # Redis is already installed on this Mac — we can add a redis service later for VPS parity.
 #
@@ -10,7 +10,7 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: weathercheck-db
+    container_name: daysignal-db
     restart: unless-stopped
     ports:
       # Host 5433 → container 5432. This Mac already has Postgres 18 on 5432
@@ -21,7 +21,7 @@ services:
     env_file:
       - .env
     volumes:
-      - weathercheck_pgdata:/var/lib/postgresql/data
+      - daysignal_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 5s
@@ -29,4 +29,4 @@ services:
       retries: 10
 
 volumes:
-  weathercheck_pgdata:
+  daysignal_pgdata:

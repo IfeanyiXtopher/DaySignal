@@ -1,4 +1,4 @@
-# WeatherCheck — Build Plan and Progress Tracker
+# DaySignal — Build Plan and Progress Tracker
 
 Timezone-aware weather alert delivery service. Users save a location, local
 alert time, timezone, and rain threshold. An hourly scheduler selects only
@@ -33,7 +33,7 @@ and a **Verify** command or check that proves it is done. Nothing is marked
 
 ## Current position
 
-> **Step 5 — Hardening and demo polish: `[x]` done (local MVP).** Optional VPS deploy (5.6) and résumé links (5.7) wait until you choose to ship. Next: Step 6 — Documentation and pitch package.
+> **MVP (Steps 0–6) + Mapbox explorer polish: done locally.** Optional: VPS deploy (5.6) or résumé links (5.7). **Next product phase: Step 7 — Traffic alerts (v2)** — see below. Rename under consideration (weather-only name may not fit v2).
 
 ## Prerequisites on the developer machine
 
@@ -45,14 +45,14 @@ is ready for Step 0, not that Step 0 itself is done.
 | Ruby **3.3.12** via rbenv (project `.ruby-version`) | Step 0 | **yes** — `ruby -v` → 3.3.12 (not macOS system 2.6) |
 | Bundler | Step 0 | **yes** — Bundler 4.0.22 |
 | Rails (gem) | Step 0 | **yes** — Rails 8.1.4 |
-| PostgreSQL 16 (Docker Compose service `db`) | Step 0 | **yes** — container `weathercheck-db`, host port **5433** |
+| PostgreSQL 16 (Docker Compose service `db`) | Step 0 | **yes** — container `daysignal-db`, host port **5433** |
 | Redis | Step 0 | **yes** — `redis-cli ping` → `PONG` (v8.4.0 Homebrew) |
 | Node 20+ | Step 0 | **yes** — v24.15.0 |
 | Git | Step 0 | **yes** — 2.52.0 |
 | Docker Desktop | Step 0 | **yes** — 29.4.2 (must be running for `db`) |
 | OpenWeatherMap API key | Step 2 live | **yes** — `WEATHER_API_KEY` in root `.env` |
 | SMTP / Letter Opener | Step 3 | Letter Opener in Step 0 Gemfile; real SMTP on VPS later |
-| OpenAI API key | — | **not used** by WeatherCheck MVP |
+| OpenAI API key | — | **not used** by DaySignal MVP |
 | Small VPS | Step 5 optional | planned later; reuse `docker-compose.yml` for Postgres |
 
 ### How this machine is wired (learning note)
@@ -64,7 +64,7 @@ Mac (dev)
 └── Docker Desktop
     └── postgres:16-alpine
         container port 5432  →  host port 5433
-        DB name WeatherCheck, user postgres
+        DB name DaySignal, user postgres
 ```
 
 Why port **5433**? This Mac already has native PostgreSQL 18 on **5432**
@@ -86,11 +86,11 @@ docker compose up -d          # Postgres
 redis-cli ping                # expect PONG
 
 # 2) New terminal (rbenv is in ~/.zshrc):
-cd /Users/wyreenergy/WeatherCheck
+cd /Users/wyreenergy/DaySignal
 ruby -v                       # expect 3.3.12
 ```
 
-Folder names: Rails root is the repo root (`WeatherCheck/`). Business logic
+Folder names: Rails root is the repo root (`DaySignal/`). Business logic
 lives in `app/services/` and `app/jobs/`, not fat controllers.
 
 Database: Docker Postgres via `DATABASE_URL` in `.env`. Redis for Sidekiq.
@@ -123,7 +123,7 @@ step obeys. Produce a bootable Rails skeleton so each step has a home.
 `docs/adr/000{1,2,3}-*.md`, `README.md`, `.env.example`, Sidekiq wired,
 Docker Postgres on :5433.
 
-**Verify.** `bin/rails db:prepare` → `weather_check_development`;
+**Verify.** `bin/rails db:prepare` → `day_signal_development`;
 `bin/rails s` → `/` and `/up` HTTP 200; `bundle exec sidekiq` stays up against
 Redis; Step 0 commit on `main`.
 
@@ -151,7 +151,7 @@ alert preferences. No weather API yet.
 5. `[x]` 1.5 Root dashboard shows `alert_status_summary` when signed in.
 6. `[x]` 1.6 Tests: invalid timezone/threshold rejected; happy-path persist;
    registration + preferences controller coverage.
-7. `[x]` 1.7 Seed: `demo@weathercheck.local` / `password123` (Lagos 07:00).
+7. `[x]` 1.7 Seed: `demo@daysignal.local` / `password123` (Lagos 07:00).
 
 **Artifact.** Auth + preferences UI; schema; preference tests; seed user.
 
@@ -278,28 +278,71 @@ README 15-minute path documents boot.
 
 ---
 
-## Step 6 — Documentation and pitch package `[ ]`
+## Step 6 — Documentation and pitch package `[x]`
 
 **Goal.** A third party (or interviewer) can understand the product, run the
 demo, and map skills to Simple-style Rails work.
 
-1. `[ ]` 6.1 README table of contents; demo flow diagram
-   (`docs/demo-flow.svg` or mermaid in README).
-2. `[ ]` 6.2 `docs/pitch.md`: one section per learning use case (accounts →
+1. `[x]` 6.1 README table of contents; demo flow diagram (mermaid in README).
+2. `[x]` 6.2 `docs/pitch.md`: one section per learning use case (accounts →
    prefs → cron → fetch → decide → notify) with screen, metric/test, file
    path; Simple skill mapping (from APPROACH §14).
-3. `[ ]` 6.3 5–7 minute walkthrough **script** (`docs/walkthrough.md`) for
+3. `[x]` 6.3 5–7 minute walkthrough **script** (`docs/walkthrough.md`) for
    recording or live demo.
-4. `[ ]` 6.4 `docs/responsible_ops.md` (short): secrets, PII (email), retries,
+4. `[x]` 6.4 `docs/responsible_ops.md` (short): secrets, PII (email), retries,
    what the system never does (LLM decisions, spam without threshold).
-5. `[ ]` 6.5 Definition of done checklist mirrored in README.
+5. `[x]` 6.5 Definition of done checklist mirrored in README.
 
 **Artifact.** README demo path, `docs/pitch.md`, `docs/walkthrough.md`,
-ops/privacy note, demo diagram.
+ops/privacy note, mermaid demo flow.
 
 **Verify.** A reader can run the demo from README alone in under 15 minutes;
 walkthrough script matches actual screens; pitch maps each feature to a file
 path.
+
+**Measured on 2026-10-12.** Pitch + walkthrough + responsible_ops added;
+README TOC + mermaid + DoD checklist; suite still 56/56 green.
+
+---
+
+## Step 7 — Traffic alerts (v2) `[ ]`
+
+**Goal.** Same alert loop as weather, for **commute / route traffic**: user saves
+origin → destination (and optional leave-by window); a job polls travel time;
+deterministic rules decide; email when delay crosses a threshold.
+
+**Product framing (v2 MVP — not a Google Maps clone):**
+
+- Monitor a saved route (e.g. home → work)
+- Alert when ETA / delay is worse than a user threshold
+- Reuse auth, Sidekiq, mailer, timezone dispatch patterns from Steps 1–4
+- Mapbox map already on `/` for picking pins; Directions + Traffic APIs for data
+
+1. `[ ]` 7.1 ADR: traffic provider (likely Mapbox Directions + traffic, or Google
+   Directions) — cost, free tier, what “delay” means
+2. `[ ]` 7.2 Data model: route prefs (origin/destination lat/lng + labels,
+   enabled flag, delay threshold minutes, optional alert local time, last_alerted_at)
+3. `[ ]` 7.3 `TrafficClient` (Faraday) → travel time / duration-in-traffic DTO;
+   stubbed tests; no network in CI
+4. `[ ]` 7.4 `TrafficEvaluator` — deterministic rules only (e.g. delay ≥ N min
+   or ratio vs free-flow ≥ X); never an LLM
+5. `[ ]` 7.5 Prefs UI: set origin/destination on Mapbox map; threshold; enable
+6. `[ ]` 7.6 `TrafficAlertJob` + mailer templates; wire into dispatch (may need
+   more frequent cron than hourly — start with hourly or every 15 min)
+7. `[ ]` 7.7 Idempotency + Manual QA scenarios; update pitch/walkthrough
+8. `[ ]` 7.8 Rename decision (if product is no longer weather-only) — README,
+   brand assets, module names
+
+**Explicitly out of v2 MVP:** turn-by-turn navigation, lane guidance, multi-stop
+trips, offline maps, SMS (unless email path is rock solid).
+
+**Artifact.** Route prefs, traffic client/evaluator, jobs + mail, tests, docs.
+
+**Verify.** Stubbed traffic path triggers mail when delay high; no mail when
+clear; CI never hits Directions API; user can save a route in the UI.
+
+**Depends on:** weather email loop proven (Steps 3–5); Mapbox token present for
+map UX (Directions may use same or separate billing).
 
 ---
 
@@ -307,11 +350,13 @@ path.
 
 | Deferred | Earliest after |
 | --- | --- |
+| **Traffic / commute alerts (Step 7 / v2)** | Weather alert loop + Mapbox explorer solid |
 | SMS / WhatsApp / push | Step 5 email path solid |
 | Multi-location per user | Step 1 single location proven |
 | Admin dashboard / send metrics | Step 4 jobs logged |
 | Docker Compose one-shot | Local path proven |
-| In-app geocoding city → lat/long | Manual lat/long works |
+| In-app geocoding city → lat/long | **Done** (OpenWeatherMap Geo + Open-Meteo TZ; prefs Stimulus picker) |
+| Full Google Maps–style navigation | Never for this learning MVP / v2 |
 | Kubernetes / GraphQL / separate React SPA | Never for this MVP |
 
 ---
@@ -321,13 +366,15 @@ path.
 | Date | Step | Note |
 | --- | --- | --- |
 | 2026-10-11 | — | Tracker written from `APPROACH.md`. No Rails app generated yet. |
-| 2026-10-11 | prereq | rbenv + Ruby 3.3.12; Bundler; Docker Postgres 16 on host :5433 (`weathercheck-db`); root `.env` + `.gitignore`; Redis already local. Ready for Step 0. |
+| 2026-10-11 | prereq | rbenv + Ruby 3.3.12; Bundler; Docker Postgres 16 on host :5433 (`daysignal-db`); root `.env` + `.gitignore`; Redis already local. Ready for Step 0. |
 | 2026-10-11 | 0 | Rails 8.1 app generated (`--skip-solid`); Sidekiq + Redis + Faraday + dotenv + letter_opener; ADRs 0001–0003; README; DB prepared; web + Sidekiq verified. |
 | 2026-10-12 | 1 | Rails 8 auth + registration; alert preference fields/UI; Lagos seed; 23 tests green. Active Job `:test` adapter in test env (Sidekiq stays for dev/prod). |
 | 2026-10-12 | 2 | OpenWeatherMap 2.5 client + AlertEvaluator (12h max POP, heavy rain rule); Faraday stubs; `weather:evaluate` live OK (Lagos POP 28%). 32 tests green. |
 | 2026-10-12 | 3 | WeatherMailer + WeatherAlertJob; Letter Opener default + optional Gmail SMTP from `.env`; 37 tests green; manual deliver_one verified. |
 | 2026-10-12 | 4 | DispatchDueAlertsJob + Sidekiq-Cron hourly; local-day idempotency via last_alerted_at; scheduling docs; 46 tests green. |
 | 2026-10-12 | 5 | README 15-min path; Manual QA integration tests 6/6; WeatherClient/Sidekiq hardening; secrets audit clean. Deploy/résumé links deferred. 52 tests green. |
+| 2026-10-12 | 6 | Pitch package: `docs/pitch.md`, `walkthrough.md`, `responsible_ops.md`; README TOC + mermaid demo flow + DoD checklist. 56 tests green. |
+| 2026-10-12 | polish | Mapbox GL globe explorer on `/`; weather tiles proxied; intro fly-to-user. Traffic alerts penciled as **Step 7 (v2)**. |
 
 ---
 
@@ -342,6 +389,7 @@ path.
 | 4 | Hourly dispatch + timezone selection | `DispatchDueAlertsJob` |
 | 5 | Hardening, QA, optional deploy | Manual QA + README |
 | 6 | Pitch package + walkthrough | `docs/pitch.md` |
+| 7 | Traffic route prefs + client + alerts (v2) | `TrafficClient` / Step 7 |
 
-**Next concrete action:** Step 6 — pitch package, walkthrough script,
-responsible_ops note — or pause for VPS deploy (Step 5.6) if you prefer.
+**Next concrete action:** Optional VPS (5.6) / résumé links (5.7), or start
+Step 7 traffic v2 when ready. Consider rename before or during 7.8.
