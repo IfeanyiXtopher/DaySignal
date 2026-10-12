@@ -1,0 +1,37 @@
+<% content_for :title, "Sign up — WeatherCheck" %>
+
+<section class="panel">
+  <h1>Create an account</h1>
+  <p class="muted">Save a location and local alert time. We’ll email you when rain risk crosses your threshold.</p>
+
+  <%= form_with model: @user, url: registration_path, class: "stack" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="flash flash-alert" role="alert">
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <label>
+      Email
+      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username" %>
+    </label>
+
+    <label>
+      Password (min 8 characters)
+      <%= form.password_field :password, required: true, autocomplete: "new-password", maxlength: 72 %>
+    </label>
+
+    <label>
+      Confirm password
+      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", maxlength: 72 %>
+    </label>
+
+    <%= form.submit "Sign up", class: "button" %>
+  <% end %>
+
+  <p class="muted">Already have an account? <%= link_to "Sign in", new_session_path %></p>
+</section>

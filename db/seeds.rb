@@ -1,9 +1,13 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# Demo user for local walkthrough (fake email only — never a real person).
+demo = User.find_or_initialize_by(email_address: "demo@weathercheck.local")
+demo.password = "password123"
+demo.location_label = "Lagos, Nigeria"
+demo.latitude = 6.5244
+demo.longitude = 3.3792
+demo.timezone = "Africa/Lagos"
+demo.alert_time = Time.zone.parse("07:00")
+demo.rain_threshold = 50
+demo.alerts_enabled = true
+demo.save!
+
+puts "Seeded demo user: #{demo.email_address} / password123 (Africa/Lagos 07:00)"

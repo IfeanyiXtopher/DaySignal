@@ -1,0 +1,59 @@
+<% content_for :title, "Alert preferences — WeatherCheck" %>
+
+<section class="panel">
+  <h1>Alert preferences</h1>
+  <p class="muted">One location for MVP. Times are in your chosen timezone — not the server clock.</p>
+
+  <%= form_with model: @user, url: preferences_path, method: :patch, class: "stack" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="flash flash-alert" role="alert">
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <label>
+      Location label
+      <%= form.text_field :location_label, required: true, placeholder: "Lagos, Nigeria" %>
+    </label>
+
+    <div class="row">
+      <label>
+        Latitude
+        <%= form.number_field :latitude, required: true, step: :any, placeholder: "6.5244" %>
+      </label>
+      <label>
+        Longitude
+        <%= form.number_field :longitude, required: true, step: :any, placeholder: "3.3792" %>
+      </label>
+    </div>
+
+    <label>
+      Timezone
+      <%= form.select :timezone,
+            User.timezone_options,
+            { include_blank: "Select timezone" },
+            required: true %>
+    </label>
+
+    <label>
+      Local alert time (hour window)
+      <%= form.time_field :alert_time, required: true, include_seconds: false %>
+    </label>
+
+    <label>
+      Rain threshold (% probability of precipitation)
+      <%= form.number_field :rain_threshold, required: true, min: 0, max: 100, step: 1 %>
+    </label>
+
+    <label class="checkbox">
+      <%= form.check_box :alerts_enabled %>
+      Alerts enabled
+    </label>
+
+    <%= form.submit "Save preferences", class: "button" %>
+  <% end %>
+</section>

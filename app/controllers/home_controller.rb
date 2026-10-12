@@ -1,6 +1,8 @@
-# Temporary landing page so Step 0 has something to open in the browser.
-# Step 1 will replace the root route with auth / preferences.
+# Dashboard when signed in; public landing when not.
 class HomeController < ApplicationController
+  allow_unauthenticated_access only: :index
+
   def index
+    @user = Current.user
   end
 end

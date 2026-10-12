@@ -52,6 +52,16 @@ bundle exec sidekiq -C config/sidekiq.yml
 
 Health check: [http://localhost:3000/up](http://localhost:3000/up)
 
+### Demo user (after `bin/rails db:seed`)
+
+| Field | Value |
+| --- | --- |
+| Email | `demo@weathercheck.local` |
+| Password | `password123` |
+| Location | Lagos, Nigeria (`Africa/Lagos`, 07:00, threshold 50%) |
+
+Sign up at `/registration/new`, then save preferences at `/preferences/edit`.
+
 ## Layout (where logic will live)
 
 ```
