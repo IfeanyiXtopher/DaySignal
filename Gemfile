@@ -22,7 +22,7 @@ gem "sidekiq-cron", "~> 2.0"
 gem "connection_pool", "~> 2.4"
 
 # HTTP client for the weather API (Step 2)
-gem "faraday", "~> 2.12"
+gem "faraday", "~> 2.15"
 
 # Load root `.env` in development/test
 gem "dotenv-rails", groups: %i[development test]
